@@ -42,7 +42,7 @@ public interface CalculatorApi {
                     )
             }
     )
-    public Collection<LoanOfferDto> generatePossibleLoanOffers(LoanStatementRequestDto loanStatementRequestDto);
+    Collection<LoanOfferDto> generatePossibleLoanOffers(LoanStatementRequestDto loanStatementRequestDto);
 
     @Operation(
             summary = "Conduct scoring and calculate full credit info",
@@ -62,11 +62,10 @@ public interface CalculatorApi {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(
-                                                    schema = @Schema(implementation = CreditDto.class)))
+                                            schema = @Schema(implementation = CreditDto.class))
                             }
                     )
             }
     )
-    public CreditDto calculateFullCreditData(ScoringDataDto scoringDataDto);
+    CreditDto calculateFullCreditData(ScoringDataDto scoringDataDto);
 }
