@@ -1,4 +1,4 @@
-package steammachinist.dto;
+package steammachinist.dto.respoonse.offer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

@@ -7,12 +7,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import steammachinist.dto.CreditDto;
-import steammachinist.dto.LoanOfferDto;
-import steammachinist.dto.LoanStatementRequestDto;
-import steammachinist.dto.ScoringDataDto;
+import steammachinist.dto.respoonse.scoring.CreditDto;
+import steammachinist.dto.respoonse.offer.LoanOfferDto;
+import steammachinist.dto.request.offer.LoanStatementRequestDto;
+import steammachinist.dto.request.scoring.ScoringDataDto;
 
-import java.util.Collection;
+import java.util.List;
 
 @Tag(
         name = "Calculator MS",
@@ -42,7 +42,7 @@ public interface CalculatorApi {
                     )
             }
     )
-    Collection<LoanOfferDto> generatePossibleLoanOffers(LoanStatementRequestDto loanStatementRequestDto);
+    List<LoanOfferDto> generatePossibleLoanOffers(LoanStatementRequestDto loanStatementRequestDto);
 
     @Operation(
             summary = "Conduct scoring and calculate full credit info",

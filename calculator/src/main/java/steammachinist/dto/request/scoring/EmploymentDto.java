@@ -1,4 +1,4 @@
-package steammachinist.dto;
+package steammachinist.dto.request.scoring;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package steammachinist.dto;
+package steammachinist.dto.respoonse.scoring;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -3,12 +3,11 @@ package steammachinist.controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import steammachinist.dto.CreditDto;
-import steammachinist.dto.LoanOfferDto;
-import steammachinist.dto.LoanStatementRequestDto;
-import steammachinist.dto.ScoringDataDto;
+import steammachinist.dto.respoonse.scoring.CreditDto;
+import steammachinist.dto.respoonse.offer.LoanOfferDto;
+import steammachinist.dto.request.offer.LoanStatementRequestDto;
+import steammachinist.dto.request.scoring.ScoringDataDto;
 
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -17,7 +16,7 @@ public class CalculatorController implements CalculatorApi {
 
     @Override
     @PostMapping("/offers")
-    public Collection<LoanOfferDto> generatePossibleLoanOffers(LoanStatementRequestDto loanStatementRequestDto) {
+    public List<LoanOfferDto> generatePossibleLoanOffers(LoanStatementRequestDto loanStatementRequestDto) {
         return List.of();
     }
 
