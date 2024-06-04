@@ -1,4 +1,4 @@
-package steammachinist.dto.request.offer;
+package steammachinist.dto.offer.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Schema(description = "Loan request data")
 public record LoanStatementRequestDto(
+
         @Schema(description = "Requested loan amount", example = "1500000")
         BigDecimal amount,
         @Schema(description = "Requested loan term", example = "24")

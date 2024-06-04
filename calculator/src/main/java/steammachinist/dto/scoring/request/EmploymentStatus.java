@@ -1,8 +1,9 @@
-package steammachinist.dto.request.scoring;
+package steammachinist.dto.scoring.request;
 
 public enum EmploymentStatus {
+
     UNEMPLOYED,
-    EMPLOYED,
     SELF_EMPLOYED,
+    EMPLOYED,
     BUSINESS_OWNER
 }

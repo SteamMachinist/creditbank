@@ -3,10 +3,10 @@ package steammachinist.controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import steammachinist.dto.respoonse.scoring.CreditDto;
-import steammachinist.dto.respoonse.offer.LoanOfferDto;
-import steammachinist.dto.request.offer.LoanStatementRequestDto;
-import steammachinist.dto.request.scoring.ScoringDataDto;
+import steammachinist.dto.scoring.response.CreditDto;
+import steammachinist.dto.offer.response.LoanOfferDto;
+import steammachinist.dto.offer.request.LoanStatementRequestDto;
+import steammachinist.dto.scoring.request.ScoringDataDto;
 
 import java.util.List;
 

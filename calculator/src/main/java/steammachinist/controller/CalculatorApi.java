@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import steammachinist.dto.respoonse.scoring.CreditDto;
-import steammachinist.dto.respoonse.offer.LoanOfferDto;
-import steammachinist.dto.request.offer.LoanStatementRequestDto;
-import steammachinist.dto.request.scoring.ScoringDataDto;
+import steammachinist.dto.scoring.response.CreditDto;
+import steammachinist.dto.offer.response.LoanOfferDto;
+import steammachinist.dto.offer.request.LoanStatementRequestDto;
+import steammachinist.dto.scoring.request.ScoringDataDto;
 
 import java.util.List;
 
