@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import steammachinist.dto.scoring.response.CreditDto;
 import steammachinist.dto.offer.response.LoanOfferDto;
 import steammachinist.dto.offer.request.LoanStatementRequestDto;
@@ -42,7 +43,7 @@ public interface CalculatorApi {
                     )
             }
     )
-    List<LoanOfferDto> generatePossibleLoanOffers(LoanStatementRequestDto loanStatementRequestDto);
+    ResponseEntity<List<LoanOfferDto>> generatePossibleLoanOffers(LoanStatementRequestDto loanStatementRequestDto);
 
     @Operation(
             summary = "Conduct scoring and calculate full credit info",
@@ -67,5 +68,5 @@ public interface CalculatorApi {
                     )
             }
     )
-    CreditDto calculateFullCreditData(ScoringDataDto scoringDataDto);
+    ResponseEntity<CreditDto> calculateFullCreditData(ScoringDataDto scoringDataDto);
 }

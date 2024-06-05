@@ -6,4 +6,4 @@ spring:
     name: calculator
 
 calculator:
-  base-rate: 18.0
+  base-rate: 15.0
