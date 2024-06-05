@@ -3,36 +3,72 @@ package steammachinist.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import steammachinist.dto.GeneralCreditInfo;
+import steammachinist.dto.exception.CreditDeniedException;
 import steammachinist.dto.offer.request.LoanStatementRequestDto;
 import steammachinist.dto.offer.response.LoanOfferDto;
+import steammachinist.dto.scoring.request.EmploymentDto;
+import steammachinist.dto.scoring.request.Gender;
 import steammachinist.dto.scoring.request.ScoringDataDto;
 import steammachinist.dto.scoring.response.CreditDto;
+import steammachinist.dto.scoring.response.PaymentScheduleElementDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
+import static steammachinist.util.CalculatorUtil.generateBooleanCombinations;
+
 @Service
 @RequiredArgsConstructor
 public class CalculatorService {
 
     private final int POSSIBLE_OFFERS_NUMBER = 4;
+
     @Value("${calculator.base-rate}")
     private BigDecimal BASE_RATE;
+
     private final BigDecimal INSURANCE_RATE_CHANGE = BigDecimal.valueOf(-3);
     private final BigDecimal SALARY_CLIENT_RATE_CHANGE = BigDecimal.valueOf(-1);
+    private final BigDecimal SELF_EMPLOYED_RATE_CHANGE = BigDecimal.valueOf(1);
+    private final BigDecimal BUSINESS_OWNER_RATE_CHANGE = BigDecimal.valueOf(2);
+    private final BigDecimal MID_MANAGER_RATE_CHANGE = BigDecimal.valueOf(-2);
+    private final BigDecimal TOP_MANAGER_RATE_CHANGE = BigDecimal.valueOf(-3);
+    private final BigDecimal MARRIED_RATE_CHANGE = BigDecimal.valueOf(-3);
+    private final BigDecimal DIVORCED_RATE_CHANGE = BigDecimal.valueOf(1);
+    private final BigDecimal PREFERRED_MALE_AGE_RATE_CHANGE = BigDecimal.valueOf(-3);
+    private final BigDecimal PREFERRED_FEMALE_AGE_RATE_CHANGE = BigDecimal.valueOf(-3);
+    private final BigDecimal NON_BINARY_RATE_CHANGE = BigDecimal.valueOf(7);
+
+    private final int MIN_CURRENT_EXPERIENCE = 3;
+    private final int MIN_TOTAL_EXPERIENCE = 18;
+
+    private final int MIN_AGE_BOUND = 20;
+    private final int MAX_AGE_BOUND = 65;
+
+    private final int PREFERRED_MALE_AGE_MIN = 30;
+    private final int PREFERRED_MALE_AGE_MAX = 55;
+    private final int PREFERRED_FEMALE_AGE_MIN = 32;
+    private final int PREFERRED_FEMALE_AGE_MAX = 60;
+
+    private final BigDecimal MAX_AMOUNT_IN_SALARIES = BigDecimal.valueOf(25);
+
     private final BigDecimal INSURANCE_PROPORTION = BigDecimal.valueOf(0.1);
+
     private final BigDecimal MONTH_IN_YEAR = BigDecimal.valueOf(12);
 
     public List<LoanOfferDto> prescoreAndGenerateOffers(LoanStatementRequestDto loanStatementRequestDto) {
         return generateIncompletePossibleOffers(loanStatementRequestDto)
                 .stream()
                 .map(this::calculateOfferRate)
-                .map(this::calculateOfferTotalAmountAndMonthlyPayment)
+                .map(this::calculateOfferMonthlyPayment)
+                .map(this::calculateOfferTotalAmount)
                 .sorted(Comparator.comparing(LoanOfferDto::rate))
                 .toList();
     }
@@ -42,7 +78,6 @@ public class CalculatorService {
 
         BigDecimal requestedAmount = loanStatementRequestDto.amount();
         Integer term = loanStatementRequestDto.term();
-
         List<boolean[]> combinations = generateBooleanCombinations();
 
         return IntStream
@@ -59,58 +94,183 @@ public class CalculatorService {
                 }).toList();
     }
 
-    private List<boolean[]> generateBooleanCombinations() {
-        List<boolean[]> combinations = new ArrayList<>();
-
-        boolean[] values = {false, true};
-        for (boolean first : values) {
-            for (boolean second : values) {
-                combinations.add(new boolean[]{first, second});
-            }
-        }
-        return combinations;
-    }
-
     private LoanOfferDto calculateOfferRate(LoanOfferDto loanOfferDto) {
-        BigDecimal rate = BASE_RATE;
-        if (loanOfferDto.isInsuranceEnabled()) {
-            rate = rate.add(INSURANCE_RATE_CHANGE);
-        }
-        if (loanOfferDto.isSalaryClient()) {
-            rate = rate.add(SALARY_CLIENT_RATE_CHANGE);
-        }
-        return loanOfferDto.withRate(rate);
+        return loanOfferDto.withRate(calculateBasicChangedRate(loanOfferDto));
     }
 
-    private LoanOfferDto calculateOfferTotalAmountAndMonthlyPayment(
-            LoanOfferDto loanOfferDto) {
-
-        BigDecimal amount = loanOfferDto.requestedAmount();
-        if (loanOfferDto.isInsuranceEnabled()) {
-            amount = amount.add(loanOfferDto.requestedAmount().multiply(INSURANCE_PROPORTION));
-        }
-
-        BigDecimal monthlyPayment = calculateMonthlyPayment(amount, loanOfferDto.rate(), loanOfferDto.term());
-        BigDecimal totalAmount = monthlyPayment.multiply(BigDecimal.valueOf(loanOfferDto.term()));
-
-        return loanOfferDto.withTotalAmount(totalAmount).withMonthlyPayment(monthlyPayment);
+    private LoanOfferDto calculateOfferMonthlyPayment(LoanOfferDto loanOfferDto) {
+        return loanOfferDto.withMonthlyPayment(calculateBasicMonthlyPayment(loanOfferDto));
     }
 
-    private BigDecimal calculateMonthlyPayment(BigDecimal amount, BigDecimal rate, Integer term) {
-        BigDecimal monthlyRate = rate
-                .setScale(32, RoundingMode.HALF_EVEN)
-                .divide(BigDecimal.valueOf(100), RoundingMode.HALF_EVEN)
-                .divide(MONTH_IN_YEAR, RoundingMode.HALF_EVEN);
-
-        BigDecimal divider = BigDecimal.ONE.add(monthlyRate).pow(term).subtract(BigDecimal.ONE);
-
-        BigDecimal annuityCoefficient = monthlyRate.add(
-                monthlyRate.divide(divider, RoundingMode.HALF_EVEN));
-
-        return amount.multiply(annuityCoefficient);
+    private LoanOfferDto calculateOfferTotalAmount(LoanOfferDto loanOfferDto) {
+        return loanOfferDto.withTotalAmount(calculateBasicTotalAmount(loanOfferDto));
     }
 
     public CreditDto scoreAndCalculateCredit(ScoringDataDto scoringDataDto) {
-        return null;
+        CreditDto creditDto = generateInitialCredit(scoringDataDto);
+        creditDto = scoreCreditRate(creditDto, scoringDataDto);
+        creditDto = calculateCreditMonthlyPayment(creditDto);
+        creditDto = calculateCreditPsk(creditDto);
+        creditDto = calculateCreditPaymentSchedule(creditDto);
+        return creditDto;
+    }
+
+    public CreditDto generateInitialCredit(ScoringDataDto scoringDataDto) {
+        return CreditDto.builder()
+                .amount(scoringDataDto.amount())
+                .term(scoringDataDto.term())
+                .isInsuranceEnabled(scoringDataDto.isInsuranceEnabled())
+                .isSalaryClient(scoringDataDto.isSalaryClient())
+                .build();
+    }
+
+    private CreditDto scoreCreditRate(CreditDto creditDto, ScoringDataDto scoringDataDto) {
+        BigDecimal rate = calculateBasicChangedRate(creditDto);
+        rate = scoreEmployment(rate, creditDto, scoringDataDto);
+        rate = scoreMaritalStatus(rate, scoringDataDto);
+        rate = scoreGenderAndAge(rate, scoringDataDto);
+        return creditDto.withRate(rate);
+    }
+
+    private BigDecimal scoreEmployment(BigDecimal rate, CreditDto creditDto, ScoringDataDto scoringDataDto) {
+        EmploymentDto employmentDto = scoringDataDto.employment();
+        rate = switch (employmentDto.employmentStatus()) {
+            case UNEMPLOYED -> throw new CreditDeniedException("");
+            case EMPLOYED -> rate;
+            case SELF_EMPLOYED -> rate.add(SELF_EMPLOYED_RATE_CHANGE);
+            case BUSINESS_OWNER -> rate.add(BUSINESS_OWNER_RATE_CHANGE);
+        };
+        rate = switch (employmentDto.position()) {
+            case WORKER -> rate;
+            case MID_MANAGER -> rate.add(MID_MANAGER_RATE_CHANGE);
+            case TOP_MANAGER -> rate.add(TOP_MANAGER_RATE_CHANGE);
+            case OWNER -> rate;
+        };
+        if (creditDto.amount().compareTo(
+                employmentDto.salary().multiply(MAX_AMOUNT_IN_SALARIES)) > 0) {
+            throw new CreditDeniedException("");
+        }
+        if (employmentDto.workExperienceCurrent() < MIN_CURRENT_EXPERIENCE
+                || employmentDto.workExperienceTotal() < MIN_TOTAL_EXPERIENCE) {
+            throw new CreditDeniedException("");
+        }
+        return rate;
+    }
+
+    private BigDecimal scoreMaritalStatus(BigDecimal rate, ScoringDataDto scoringDataDto) {
+        return switch (scoringDataDto.maritalStatus()) {
+            case MARRIED -> rate.add(MARRIED_RATE_CHANGE);
+            case DIVORCED -> rate.add(DIVORCED_RATE_CHANGE);
+            case SINGLE -> rate;
+            case WIDOW_WIDOWER -> rate;
+        };
+    }
+
+    private BigDecimal scoreGenderAndAge(BigDecimal rate, ScoringDataDto scoringDataDto) {
+        int age = Period.between(scoringDataDto.birthdate(), LocalDate.now()).getYears();
+        Gender gender = scoringDataDto.gender();
+        if (age < MIN_AGE_BOUND || age > MAX_AGE_BOUND) {
+            throw new CreditDeniedException("");
+        }
+        rate = switch (gender) {
+            case MALE -> {
+                if (age > PREFERRED_MALE_AGE_MIN && age < PREFERRED_MALE_AGE_MAX) {
+                    yield rate.add(PREFERRED_MALE_AGE_RATE_CHANGE);
+                } else yield rate;
+            }
+            case FEMALE -> {
+                if (age > PREFERRED_FEMALE_AGE_MIN && age < PREFERRED_FEMALE_AGE_MAX) {
+                    yield rate.add(PREFERRED_FEMALE_AGE_RATE_CHANGE);
+                } else yield rate;
+            }
+            case NON_BINARY -> rate.add(NON_BINARY_RATE_CHANGE);
+        };
+        return rate;
+    }
+
+    private CreditDto calculateCreditMonthlyPayment(CreditDto creditDto) {
+        return creditDto.withMonthlyPayment(calculateBasicMonthlyPayment(creditDto));
+    }
+
+    private CreditDto calculateCreditPsk(CreditDto creditDto) {
+        return creditDto.withPsk(calculateBasicTotalAmount(creditDto));
+    }
+
+    private CreditDto calculateCreditPaymentSchedule(CreditDto creditDto) {
+        BigDecimal monthlyRate = calculateMonthlyRate(creditDto.rate());
+        BigDecimal interestPayment = calculateInterestPayment(creditDto.psk(), monthlyRate);
+        List<PaymentScheduleElementDto> paymentSchedule = new ArrayList<>();
+
+        paymentSchedule.add(
+                PaymentScheduleElementDto.builder()
+                        .number(0)
+                        .date(LocalDate.now().plusMonths(1))
+                        .totalPayment(creditDto.monthlyPayment())
+                        .debtPayment(creditDto.monthlyPayment().subtract(interestPayment))
+                        .interestPayment(interestPayment)
+                        .remainingDebt(creditDto.psk().subtract(creditDto.monthlyPayment()))
+                        .build());
+
+        for (int i = 1; i < creditDto.term(); i++) {
+            paymentSchedule.add(calculateNextPayment(paymentSchedule.get(i - 1), monthlyRate));
+        }
+        return creditDto.withPaymentSchedule(paymentSchedule);
+    }
+
+    private PaymentScheduleElementDto calculateNextPayment(PaymentScheduleElementDto previous, BigDecimal monthlyRate) {
+        BigDecimal interestPayment = calculateInterestPayment(previous.remainingDebt(), monthlyRate);
+        return PaymentScheduleElementDto.builder()
+                .number(previous.number() + 1)
+                .date(previous.date().plusMonths(1))
+                .totalPayment(previous.totalPayment())
+                .interestPayment(interestPayment)
+                .debtPayment(previous.totalPayment().subtract(interestPayment))
+                .remainingDebt(previous.remainingDebt().subtract(previous.totalPayment()))
+                .build();
+    }
+
+    private BigDecimal calculateInterestPayment(BigDecimal remainingDebt, BigDecimal monthlyRate) {
+        return remainingDebt.multiply(monthlyRate);
+    }
+
+    private BigDecimal calculateBasicChangedRate(GeneralCreditInfo generalCreditInfo) {
+        BigDecimal rate = BASE_RATE;
+        if (generalCreditInfo.isInsuranceEnabled()) {
+            rate = rate.add(INSURANCE_RATE_CHANGE);
+        }
+        if (generalCreditInfo.isSalaryClient()) {
+            rate = rate.add(SALARY_CLIENT_RATE_CHANGE);
+        }
+        return rate;
+    }
+
+    private BigDecimal calculateBasicMonthlyPayment(GeneralCreditInfo generalCreditInfo) {
+
+        BigDecimal amount = generalCreditInfo.amount();
+        if (generalCreditInfo.isInsuranceEnabled()) {
+            amount = amount.add(generalCreditInfo.amount().multiply(INSURANCE_PROPORTION));
+        }
+        return calculateMonthlyPayment(amount, generalCreditInfo.rate(), generalCreditInfo.term());
+    }
+
+    private BigDecimal calculateMonthlyPayment(BigDecimal amount, BigDecimal rate, Integer term) {
+
+        BigDecimal monthlyRate = calculateMonthlyRate(rate);
+        BigDecimal onePlusRateToPowTerm = BigDecimal.ONE.add(monthlyRate).pow(term);
+
+        BigDecimal annuityCoefficient = monthlyRate.multiply(onePlusRateToPowTerm)
+                .divide(onePlusRateToPowTerm.subtract(BigDecimal.ONE), 32, RoundingMode.HALF_EVEN);
+
+        return amount.multiply(annuityCoefficient).setScale(2, RoundingMode.HALF_EVEN);
+    }
+
+    private BigDecimal calculateMonthlyRate(BigDecimal rate) {
+        return rate
+                .divide(BigDecimal.valueOf(100), 32, RoundingMode.HALF_EVEN)
+                .divide(MONTH_IN_YEAR, 32, RoundingMode.HALF_EVEN);
+    }
+
+    private BigDecimal calculateBasicTotalAmount(GeneralCreditInfo generalCreditInfo) {
+        return generalCreditInfo.monthlyPayment().multiply(BigDecimal.valueOf(generalCreditInfo.term()));
     }
 }

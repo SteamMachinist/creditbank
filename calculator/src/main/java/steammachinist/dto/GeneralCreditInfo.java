@@ -1,0 +1,30 @@
+package steammachinist.dto;
+
+import steammachinist.dto.offer.response.LoanOfferDto;
+import steammachinist.dto.scoring.response.CreditDto;
+
+import java.math.BigDecimal;
+
+public interface GeneralCreditInfo {
+
+    default BigDecimal amount() {
+        if (this instanceof LoanOfferDto loanOffer) {
+            return loanOffer.requestedAmount();
+        } else if (this instanceof CreditDto credit) {
+            return credit.amount();
+        }
+        throw new UnsupportedOperationException("Unsupported type: " + this.getClass().getName());
+    }
+
+    Integer term();
+
+    BigDecimal monthlyPayment();
+    GeneralCreditInfo withMonthlyPayment(BigDecimal monthlyPayment);
+
+    BigDecimal rate();
+    GeneralCreditInfo withRate(BigDecimal rate);
+
+    Boolean isInsuranceEnabled();
+
+    Boolean isSalaryClient();
+}

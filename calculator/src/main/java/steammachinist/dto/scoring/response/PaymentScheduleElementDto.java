@@ -1,11 +1,13 @@
 package steammachinist.dto.scoring.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Schema(description = "Data on individual payment")
+@Builder
 public record PaymentScheduleElementDto(
 
         @Schema(description = "Payment number", example = "1")
