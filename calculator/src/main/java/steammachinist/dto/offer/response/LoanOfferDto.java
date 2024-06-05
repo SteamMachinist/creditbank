@@ -1,11 +1,13 @@
 package steammachinist.dto.offer.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Schema(description = "Loan offer data")
+@Builder
 public record LoanOfferDto(
 
         @Schema(description = "Unique offer UUID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
