@@ -200,17 +200,18 @@ public class CalculatorService {
 
     private CreditDto calculateCreditPaymentSchedule(CreditDto creditDto) {
         BigDecimal monthlyRate = calculateMonthlyRate(creditDto.rate());
-        BigDecimal interestPayment = calculateInterestPayment(creditDto.psk(), monthlyRate);
-        List<PaymentScheduleElementDto> paymentSchedule = new ArrayList<>();
+        BigDecimal interestPayment = calculateInterestPayment(creditDto.amount(), monthlyRate);
+        BigDecimal debtPayment = creditDto.monthlyPayment().subtract(interestPayment);
 
+        List<PaymentScheduleElementDto> paymentSchedule = new ArrayList<>();
         paymentSchedule.add(
                 PaymentScheduleElementDto.builder()
                         .number(0)
                         .date(LocalDate.now().plusMonths(1))
                         .totalPayment(creditDto.monthlyPayment())
-                        .debtPayment(creditDto.monthlyPayment().subtract(interestPayment))
+                        .debtPayment(debtPayment)
                         .interestPayment(interestPayment)
-                        .remainingDebt(creditDto.psk().subtract(creditDto.monthlyPayment()))
+                        .remainingDebt(creditDto.amount().subtract(debtPayment))
                         .build());
 
         for (int i = 1; i < creditDto.term(); i++) {
@@ -221,18 +222,19 @@ public class CalculatorService {
 
     private PaymentScheduleElementDto calculateNextPayment(PaymentScheduleElementDto previous, BigDecimal monthlyRate) {
         BigDecimal interestPayment = calculateInterestPayment(previous.remainingDebt(), monthlyRate);
+        BigDecimal debtPayment = previous.totalPayment().subtract(interestPayment);
         return PaymentScheduleElementDto.builder()
                 .number(previous.number() + 1)
                 .date(previous.date().plusMonths(1))
                 .totalPayment(previous.totalPayment())
                 .interestPayment(interestPayment)
-                .debtPayment(previous.totalPayment().subtract(interestPayment))
-                .remainingDebt(previous.remainingDebt().subtract(previous.totalPayment()))
+                .debtPayment(debtPayment)
+                .remainingDebt(previous.remainingDebt().subtract(debtPayment))
                 .build();
     }
 
     private BigDecimal calculateInterestPayment(BigDecimal remainingDebt, BigDecimal monthlyRate) {
-        return remainingDebt.multiply(monthlyRate);
+        return remainingDebt.multiply(monthlyRate).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     private BigDecimal calculateBasicChangedRate(GeneralCreditInfo generalCreditInfo) {

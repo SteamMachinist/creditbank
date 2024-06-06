@@ -1,6 +1,7 @@
 package steammachinist.dto.offer.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import steammachinist.validation.Adult;
 
 import javax.validation.constraints.*;
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Schema(description = "Loan request data")
+@Builder
 public record LoanStatementRequestDto(
 
         @NotNull

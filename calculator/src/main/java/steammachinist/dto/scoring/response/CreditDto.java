@@ -2,6 +2,7 @@ package steammachinist.dto.scoring.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.With;
 import steammachinist.dto.GeneralCreditInfo;
 

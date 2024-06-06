@@ -1,11 +1,13 @@
 package steammachinist.dto.scoring.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 
+@Builder
 @Schema(description = "User employment data")
 public record EmploymentDto(
 
