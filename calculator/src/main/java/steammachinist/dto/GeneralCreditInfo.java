@@ -13,7 +13,7 @@ public interface GeneralCreditInfo {
         } else if (this instanceof CreditDto credit) {
             return credit.amount();
         }
-        throw new UnsupportedOperationException("Unsupported type: " + this.getClass().getName());
+        throw new UnsupportedOperationException(String.format("Unsupported type: %s", this.getClass().getName()));
     }
 
     Integer term();

@@ -26,7 +26,7 @@ public class CalculatorControllerAdvice {
 
     @ExceptionHandler(CreditDeniedException.class)
     public ResponseEntity<String> handleCreditDeniedExceptions(CreditDeniedException e) {
-        return ResponseEntity.badRequest().body("CreditDeniedException: " + e.getMessage());
+        return ResponseEntity.badRequest().body(String.format("CreditDeniedException: %s", e.getMessage()));
     }
 
 }
