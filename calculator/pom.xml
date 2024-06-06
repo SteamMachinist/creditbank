@@ -13,19 +13,17 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <springdoc-openapi-ui.vesrion>1.8.0</springdoc-openapi-ui.vesrion>
+        <junit-jupiter-api.vesrion>5.10.2</junit-jupiter-api.vesrion>
+        <spring-boot-maven-plugin.vesrion>3.2.5</spring-boot-maven-plugin.vesrion>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.7.18</version> <!-- The latest 2.7.x version -->
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.18</version> <!-- The latest 2.7.x version -->
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
     <dependencies>
         <!-- Spring Boot Starter Web -->
@@ -64,14 +62,14 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.8.0</version>
+            <version>${springdoc-openapi-ui.vesrion}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.2</version>
+            <version>${junit-jupiter-api.vesrion}</version>
             <scope>test</scope>
         </dependency>
 
@@ -84,7 +82,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>${spring-boot-maven-plugin.vesrion}</version>
             </plugin>
         </plugins>
     </build>
