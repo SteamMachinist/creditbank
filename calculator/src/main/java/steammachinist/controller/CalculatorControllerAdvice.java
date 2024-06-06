@@ -5,6 +5,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import steammachinist.dto.exception.CreditDeniedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,5 +24,9 @@ public class CalculatorControllerAdvice {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    @ExceptionHandler(CreditDeniedException.class)
+    public ResponseEntity<String> handleCreditDeniedExceptions(CreditDeniedException e) {
+        return ResponseEntity.badRequest().body("CreditDeniedException: " + e.getMessage());
+    }
 
 }
