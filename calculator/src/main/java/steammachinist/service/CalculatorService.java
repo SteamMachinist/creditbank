@@ -31,39 +31,39 @@ import static steammachinist.util.CalculatorUtil.generateBooleanCombinations;
 @Slf4j
 public class CalculatorService {
 
-    private final int POSSIBLE_OFFERS_NUMBER = 4;
+    private static final int POSSIBLE_OFFERS_NUMBER = 4;
 
     @Value("${calculator.base-rate}")
     private BigDecimal BASE_RATE;
 
-    private final BigDecimal INSURANCE_RATE_CHANGE = BigDecimal.valueOf(-3);
-    private final BigDecimal SALARY_CLIENT_RATE_CHANGE = BigDecimal.valueOf(-1);
-    private final BigDecimal SELF_EMPLOYED_RATE_CHANGE = BigDecimal.valueOf(1);
-    private final BigDecimal BUSINESS_OWNER_RATE_CHANGE = BigDecimal.valueOf(2);
-    private final BigDecimal MID_MANAGER_RATE_CHANGE = BigDecimal.valueOf(-2);
-    private final BigDecimal TOP_MANAGER_RATE_CHANGE = BigDecimal.valueOf(-3);
-    private final BigDecimal MARRIED_RATE_CHANGE = BigDecimal.valueOf(-3);
-    private final BigDecimal DIVORCED_RATE_CHANGE = BigDecimal.valueOf(1);
-    private final BigDecimal PREFERRED_MALE_AGE_RATE_CHANGE = BigDecimal.valueOf(-3);
-    private final BigDecimal PREFERRED_FEMALE_AGE_RATE_CHANGE = BigDecimal.valueOf(-3);
-    private final BigDecimal NON_BINARY_RATE_CHANGE = BigDecimal.valueOf(7);
+    private static final BigDecimal INSURANCE_RATE_CHANGE = BigDecimal.valueOf(-3);
+    private static final BigDecimal SALARY_CLIENT_RATE_CHANGE = BigDecimal.valueOf(-1);
+    private static final BigDecimal SELF_EMPLOYED_RATE_CHANGE = BigDecimal.valueOf(1);
+    private static final BigDecimal BUSINESS_OWNER_RATE_CHANGE = BigDecimal.valueOf(2);
+    private static final BigDecimal MID_MANAGER_RATE_CHANGE = BigDecimal.valueOf(-2);
+    private static final BigDecimal TOP_MANAGER_RATE_CHANGE = BigDecimal.valueOf(-3);
+    private static final BigDecimal MARRIED_RATE_CHANGE = BigDecimal.valueOf(-3);
+    private static final BigDecimal DIVORCED_RATE_CHANGE = BigDecimal.valueOf(1);
+    private static final BigDecimal PREFERRED_MALE_AGE_RATE_CHANGE = BigDecimal.valueOf(-3);
+    private static final BigDecimal PREFERRED_FEMALE_AGE_RATE_CHANGE = BigDecimal.valueOf(-3);
+    private static final BigDecimal NON_BINARY_RATE_CHANGE = BigDecimal.valueOf(7);
 
-    private final int MIN_CURRENT_EXPERIENCE = 3;
-    private final int MIN_TOTAL_EXPERIENCE = 18;
+    private static final int MIN_CURRENT_EXPERIENCE = 3;
+    private static final int MIN_TOTAL_EXPERIENCE = 18;
 
-    private final int MIN_AGE_BOUND = 20;
-    private final int MAX_AGE_BOUND = 65;
+    private static final int MIN_AGE_BOUND = 20;
+    private static final int MAX_AGE_BOUND = 65;
 
-    private final int PREFERRED_MALE_AGE_MIN = 30;
-    private final int PREFERRED_MALE_AGE_MAX = 55;
-    private final int PREFERRED_FEMALE_AGE_MIN = 32;
-    private final int PREFERRED_FEMALE_AGE_MAX = 60;
+    private static final int PREFERRED_MALE_AGE_MIN = 30;
+    private static final int PREFERRED_MALE_AGE_MAX = 55;
+    private static final int PREFERRED_FEMALE_AGE_MIN = 32;
+    private static final int PREFERRED_FEMALE_AGE_MAX = 60;
 
-    private final BigDecimal MAX_AMOUNT_IN_SALARIES = BigDecimal.valueOf(25);
+    private static final BigDecimal MAX_AMOUNT_IN_SALARIES = BigDecimal.valueOf(25);
 
-    private final BigDecimal INSURANCE_PROPORTION = BigDecimal.valueOf(0.1);
+    private static final BigDecimal INSURANCE_PROPORTION = BigDecimal.valueOf(0.1);
 
-    private final BigDecimal MONTH_IN_YEAR = BigDecimal.valueOf(12);
+    private static final BigDecimal MONTH_IN_YEAR = BigDecimal.valueOf(12);
 
     public List<LoanOfferDto> prescoreAndGenerateOffers(LoanStatementRequestDto loanStatementRequestDto) {
         return generateIncompletePossibleOffers(loanStatementRequestDto)
