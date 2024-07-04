@@ -16,6 +16,7 @@
         <spring-boot-maven-plugin.vesrion>3.2.5</spring-boot-maven-plugin.vesrion>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <maven-compiler-plugin.vestion>3.13.0</maven-compiler-plugin.vestion>
+        <hypersistence-utils.version>3.8.1</hypersistence-utils.version>
     </properties>
 
     <parent>
@@ -91,6 +92,13 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.hypersistence/hypersistence-utils-hibernate-55 -->
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-55</artifactId>
+            <version>${hypersistence-utils.version}</version>
         </dependency>
 
     </dependencies>
