@@ -1,0 +1,9 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: deal
+  jpa:
+    hibernate:
+      ddl-auto: create
