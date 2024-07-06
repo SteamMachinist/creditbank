@@ -25,7 +25,7 @@ public class Statement {
     private UUID statementId;
 
     @OneToOne
-    @JoinColumn(name = "cleint_id")
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @OneToOne
