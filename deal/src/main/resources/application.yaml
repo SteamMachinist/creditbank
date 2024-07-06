@@ -7,3 +7,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/creditbank_db
+    password: password
+    username: creditbank_user
