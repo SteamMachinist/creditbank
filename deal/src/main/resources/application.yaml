@@ -4,9 +4,11 @@ server:
 spring:
   application:
     name: deal
+
   jpa:
     hibernate:
       ddl-auto: create
+    show-sql: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/creditbank_db
