@@ -22,10 +22,11 @@ import java.util.List;
 public interface DealApi {
 
     @Operation(
-            summary = "Generate loan offers from request",
-            description = "Generates a list of possible loan offers from provided loan request",
+            summary = "Save new Client and Statement, generate loan offers from request",
+            description = "Saves new Client and Statement to database, " +
+                    "then generates a list of possible loan offers from provided loan request",
             requestBody = @RequestBody(
-                    description = "Loan request data to generate offers for",
+                    description = "Loan request data to create Client, Statement and generate offers for",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = LoanStatementRequestDto.class)
@@ -34,7 +35,7 @@ public interface DealApi {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Successful loan offers generation",
+                            description = "Successful Client and Statement creation, and loan offers generation",
                             content = {
                                     @Content(
                                             mediaType = "application/json",
@@ -43,11 +44,12 @@ public interface DealApi {
                     )
             }
     )
-    ResponseEntity<List<LoanOfferDto>> generatePossibleLoanOffers(LoanStatementRequestDto loanStatementRequestDto);
+    ResponseEntity<List<LoanOfferDto>> initialRegisterAndGenerateLoanOffers(
+            LoanStatementRequestDto loanStatementRequestDto);
 
     @Operation(
             summary = "Chooses loan offer",
-            description = "Sets provided in request loan offer as chosen",
+            description = "Sets provided in request loan offer as chosen, updates Statement status",
             requestBody = @RequestBody(
                     description = "Chosen loan offer",
                     content = @Content(
@@ -83,6 +85,7 @@ public interface DealApi {
                     )
             }
     )
-    ResponseEntity<Void> finishRegistrationAndCalculateCredit(@Parameter(description = "Statement UUID") String statementId,
-                                                              FinishRegistrationRequestDto finishRegistrationRequestDto);
+    ResponseEntity<Void> finishRegistrationAndCalculateCredit(
+            @Parameter(description = "Statement UUID") String statementId,
+            FinishRegistrationRequestDto finishRegistrationRequestDto);
 }
