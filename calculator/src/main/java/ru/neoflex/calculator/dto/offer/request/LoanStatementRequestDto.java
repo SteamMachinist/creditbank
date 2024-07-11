@@ -1,5 +1,6 @@
 package ru.neoflex.calculator.dto.offer.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import ru.neoflex.calculator.validation.Adult;
@@ -43,7 +44,8 @@ public record LoanStatementRequestDto(
         @NotNull
         @Adult
         @Schema(description = "User date of birth", example = "1985-05-12")
-        LocalDate birthdate,
+        @JsonProperty("birthdate")
+        LocalDate birthDate,
 
         @NotNull
         @Size(min = 4, max = 4)
