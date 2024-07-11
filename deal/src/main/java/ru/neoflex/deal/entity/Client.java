@@ -1,7 +1,9 @@
 package ru.neoflex.deal.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -12,6 +14,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity

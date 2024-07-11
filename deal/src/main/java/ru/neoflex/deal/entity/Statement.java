@@ -1,8 +1,11 @@
 package ru.neoflex.deal.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
@@ -12,6 +15,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -35,6 +40,8 @@ public class Statement {
     @Enumerated(EnumType.STRING)
     ApplicationStatus status;
 
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private Timestamp creationDate;
 
     @Type(type = "json")
