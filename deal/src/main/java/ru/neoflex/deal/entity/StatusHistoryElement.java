@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public record StatusHistoryElement(
 
-        String status,
-        Timestamp timestamp,
+        ApplicationStatus status,
+        Timestamp time,
         ChangeType changeType) {
 }
