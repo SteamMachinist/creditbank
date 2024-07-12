@@ -19,6 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@EntityListeners(ClientListener.class)
 @Table(name = "client")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 public class Client {
