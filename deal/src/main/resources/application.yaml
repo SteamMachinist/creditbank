@@ -14,3 +14,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/creditbank_db
     password: password
     username: creditbank_user
+
+deal:
+  calculator-base-url: http://localhost:8080/calculator
