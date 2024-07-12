@@ -9,6 +9,7 @@ import java.util.UUID;
 public record Passport(
 
         @JsonProperty("passport_uuid")
+        @With
         UUID passportUUID,
         String series,
         String number,

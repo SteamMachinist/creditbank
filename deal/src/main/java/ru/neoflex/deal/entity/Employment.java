@@ -1,6 +1,7 @@
 package ru.neoflex.deal.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.With;
 import ru.neoflex.calculator.dto.scoring.request.EmploymentStatus;
 import ru.neoflex.calculator.dto.scoring.request.Position;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
 public record Employment(
 
         @JsonProperty("employment_uuid")
+        @With
         UUID employmentUUID,
         @JsonProperty("employment_status")
         EmploymentStatus employmentStatus,

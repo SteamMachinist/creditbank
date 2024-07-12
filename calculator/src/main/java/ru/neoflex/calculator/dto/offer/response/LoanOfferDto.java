@@ -12,6 +12,7 @@ import java.util.UUID;
 @Builder
 public record LoanOfferDto(
 
+        @With
         @Schema(description = "Unique offer UUID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
         UUID statementId,
 
