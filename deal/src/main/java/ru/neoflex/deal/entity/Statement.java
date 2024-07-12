@@ -12,6 +12,7 @@ import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,4 +56,10 @@ public class Statement {
     @Type(type = "json")
     @Column(columnDefinition = "jsonb")
     List<StatusHistoryElement> statusHistory;
+
+    public Statement(Client client) {
+        this.client = client;
+        this.status = ApplicationStatus.PREAPPROVAL;
+        this.statusHistory = new ArrayList<>();
+    }
 }

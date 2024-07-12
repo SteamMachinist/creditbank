@@ -24,20 +24,16 @@ public class DealService {
     private final LoanStatementRequestMapper loanStatementRequestMapper;
 
     public List<LoanOfferDto> initialRegisterAndGenerateLoanOffers(LoanStatementRequestDto loanStatementRequestDto) {
-        Client client = loanStatementRequestMapper.mapClient(loanStatementRequestDto);
-        client.setPassport(loanStatementRequestMapper.mapPassport(loanStatementRequestDto));
-        client = clientService.addClient(client);
+        Client client = clientService.addClient(
+                loanStatementRequestMapper.mapClient(loanStatementRequestDto));
 
-        Statement statement = loanStatementRequestMapper.mapStatement(loanStatementRequestDto);
-        statement.setClient(client);
-        statement.setStatus(ApplicationStatus.PREAPPROVAL);
-        statement.setStatusHistory(new ArrayList<>());
-        statement = statementService.addStatement(statement);
+        Statement statement = statementService.addStatement(
+                new Statement(client));
 
         List<LoanOfferDto> offers = calculatorApiService.getPossibleOffers(loanStatementRequestDto);
-        Statement finalStatement = statement;
+
         return offers.stream()
-                .map(loanOfferDto -> loanOfferDto.withStatementId(finalStatement.getStatementId()))
+                .map(loanOfferDto -> loanOfferDto.withStatementId(statement.getStatementId()))
                 .toList();
     }
 
