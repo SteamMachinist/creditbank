@@ -42,7 +42,19 @@ public class DealService {
     }
 
     public void chooseLoanOffer(LoanOfferDto loanOfferDto) {
+        Statement statement = statementService.getStatementById(loanOfferDto.statementId());
+        statement.setAppliedOffer(loanOfferDto);
+        addCurrentStatusToHistory(statement);
+        statement.setStatus(ApplicationStatus.APPROVED);
+        statementService.updateStatement(statement);
+    }
 
+    private void addCurrentStatusToHistory(Statement statement) {
+        statement.getStatusHistory().add(
+                new StatusHistoryElement(
+                        statement.getStatus(),
+                        new Timestamp(System.currentTimeMillis()),
+                        ChangeType.AUTOMATIC));
     }
 
     public void finishRegistrationAndCalculateCredit(String statementId,
