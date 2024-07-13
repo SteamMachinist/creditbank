@@ -1,12 +1,15 @@
 package ru.neoflex.deal.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import io.hypersistence.utils.hibernate.type.json.JsonStringType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import ru.neoflex.calculator.dto.scoring.response.PaymentScheduleElementDto;
 
 import javax.persistence.*;
@@ -20,7 +23,9 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "credit")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonStringType.class),
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)})
 public class Credit {
 
     @Id
@@ -34,8 +39,9 @@ public class Credit {
     private BigDecimal rate;
     private BigDecimal psk;
 
-    @Type(type = "json")
+    @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
+    @ColumnTransformer(write = "?::jsonb")
     private List<PaymentScheduleElementDto> paymentSchedule;
 
     @Column(name = "insurance_enabled")

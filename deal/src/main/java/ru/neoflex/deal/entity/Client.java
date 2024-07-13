@@ -1,12 +1,15 @@
 package ru.neoflex.deal.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import io.hypersistence.utils.hibernate.type.json.JsonStringType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import ru.neoflex.calculator.dto.scoring.request.Gender;
 import ru.neoflex.calculator.dto.scoring.request.MaritalStatus;
 
@@ -21,7 +24,9 @@ import java.util.UUID;
 @Entity
 @EntityListeners(ClientListener.class)
 @Table(name = "client")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonStringType.class),
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)})
 public class Client {
 
     @Id
@@ -43,12 +48,14 @@ public class Client {
 
     private Integer dependentAmount;
 
-    @Type(type = "json")
+    @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
+    @ColumnTransformer(write = "?::jsonb")
     private Passport passport;
 
-    @Type(type = "json")
+    @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
+    @ColumnTransformer(write = "?::jsonb")
     private Employment employment;
 
     private String accountNumber;

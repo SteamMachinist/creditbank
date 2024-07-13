@@ -1,16 +1,17 @@
 package ru.neoflex.deal.entity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import io.hypersistence.utils.hibernate.type.json.JsonStringType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.*;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,9 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "statement")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonStringType.class),
+        @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)})
 public class Statement {
 
     @Id
@@ -45,16 +48,18 @@ public class Statement {
     @CreationTimestamp
     private Timestamp creationDate;
 
-    @Type(type = "json")
+    @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
+    @ColumnTransformer(write = "?::jsonb")
     private LoanOfferDto appliedOffer;
 
     private Timestamp signDate;
 
     String sesCode;
 
-    @Type(type = "json")
+    @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
+    @ColumnTransformer(write = "?::jsonb")
     List<StatusHistoryElement> statusHistory;
 
     public Statement(Client client) {
