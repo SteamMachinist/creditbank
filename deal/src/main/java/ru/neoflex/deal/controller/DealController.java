@@ -28,7 +28,7 @@ public class DealController implements DealApi {
 
     @Override
     @PostMapping("/offer/select")
-    public ResponseEntity<Void> chooseLoanOffer(LoanOfferDto loanOfferDto) {
+    public ResponseEntity<Void> chooseLoanOffer(@RequestBody @Valid LoanOfferDto loanOfferDto) {
         dealService.chooseLoanOffer(loanOfferDto);
         return ResponseEntity.ok().build();
     }
