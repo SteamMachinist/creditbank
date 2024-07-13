@@ -6,7 +6,7 @@ import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.deal.entity.Client;
 import ru.neoflex.deal.entity.Passport;
 
-@Mapper(componentModel = "spring", imports = {Passport.class})
+@Mapper(componentModel = "spring")
 public interface LoanStatementRequestMapper {
 
     @Mapping(target = "series", source = "passportSeries")
