@@ -14,12 +14,12 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.vesrion>2.7.18</spring-boot.vesrion>
-        <org.projectlombok.version>1.18.30</org.projectlombok.version>
+        <org.projectlombok.version>1.18.34</org.projectlombok.version>
         <postgres-driver.version>42.7.3</postgres-driver.version>
         <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
         <junit-jupiter-api.version>5.10.2</junit-jupiter-api.version>
         <spring-boot-maven-plugin.version>3.2.5</spring-boot-maven-plugin.version>
-        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <org.mapstruct.version>1.6.0.Beta2</org.mapstruct.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <hypersistence-utils.version>3.8.1</hypersistence-utils.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
