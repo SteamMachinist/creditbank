@@ -74,7 +74,7 @@ public interface DealApi {
                     description = "Loan request data to generate offers for",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = LoanStatementRequestDto.class)
+                            schema = @Schema(implementation = FinishRegistrationRequestDto.class)
                     )
             ),
             responses = {
