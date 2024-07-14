@@ -21,7 +21,6 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.IntStream;
 
 import static ru.neoflex.calculator.util.CalculatorUtil.generateBooleanCombinations;
@@ -87,7 +86,7 @@ public class CalculatorService {
                 .mapToObj(value -> {
                     boolean[] combination = combinations.get(value);
                     return LoanOfferDto.builder()
-                            .statementId(UUID.randomUUID())
+                            .statementId(null)
                             .requestedAmount(requestedAmount)
                             .term(term)
                             .isInsuranceEnabled(combination[0])
