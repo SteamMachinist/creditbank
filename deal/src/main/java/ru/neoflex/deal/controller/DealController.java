@@ -8,7 +8,6 @@ import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
 import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
 import ru.neoflex.deal.service.DealService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,14 +20,14 @@ public class DealController implements DealApi {
     @Override
     @PostMapping("/statement")
     public ResponseEntity<List<LoanOfferDto>> initialRegisterAndGenerateLoanOffers(
-            @RequestBody @Valid LoanStatementRequestDto loanStatementRequestDto) {
+            @RequestBody LoanStatementRequestDto loanStatementRequestDto) {
 
         return ResponseEntity.ok(dealService.initialRegisterAndGenerateLoanOffers(loanStatementRequestDto));
     }
 
     @Override
     @PostMapping("/offer/select")
-    public ResponseEntity<Void> chooseLoanOffer(@RequestBody @Valid LoanOfferDto loanOfferDto) {
+    public ResponseEntity<Void> chooseLoanOffer(@RequestBody LoanOfferDto loanOfferDto) {
         dealService.chooseLoanOffer(loanOfferDto);
         return ResponseEntity.ok().build();
     }
@@ -37,7 +36,7 @@ public class DealController implements DealApi {
     @PostMapping("/calculate/{statementId}")
     public ResponseEntity<Void> finishRegistrationAndCalculateCredit(
             @PathVariable String statementId,
-            @RequestBody @Valid FinishRegistrationRequestDto finishRegistrationRequestDto) {
+            @RequestBody FinishRegistrationRequestDto finishRegistrationRequestDto) {
 
         dealService.finishRegistrationAndCalculateCredit(statementId, finishRegistrationRequestDto);
         return ResponseEntity.ok().build();
