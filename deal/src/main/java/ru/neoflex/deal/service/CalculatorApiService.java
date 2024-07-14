@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.neoflex.calculator.dto.exception.CreditDeniedException;
 import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
 import ru.neoflex.calculator.dto.scoring.request.ScoringDataDto;
 import ru.neoflex.calculator.dto.scoring.response.CreditDto;
+import ru.neoflex.deal.exception.PrescoringFailedException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +39,10 @@ public class CalculatorApiService {
                 LoanOfferDto[].class
         );
 
+        if (response.getStatusCode().value() == 400) {
+            throw new PrescoringFailedException("");
+        }
+
         return Arrays.asList(response.getBody());
     }
 
@@ -54,6 +60,10 @@ public class CalculatorApiService {
                 request,
                 CreditDto.class
         );
+
+        if (response.getStatusCode().value() == 400) {
+            throw new CreditDeniedException("");
+        }
 
         return response.getBody();
     }
