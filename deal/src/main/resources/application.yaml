@@ -16,4 +16,5 @@ spring:
     username: creditbank_user
 
 deal:
-  calculator-base-url: http://localhost:8080/calculator
+  calculator-offers-url: http://localhost:8080/calculator/offers
+  calculator-calc-url: http://localhost:8080/calculator/calc

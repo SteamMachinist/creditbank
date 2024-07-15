@@ -19,21 +19,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CalculatorApiService {
 
-    @Value("${deal.calculator-base-url}")
-    private String calculatorApiUrl;
+    @Value("${deal.calculator-offers-url}")
+    private String calculatorOffersUrl;
+    @Value("${deal.calculator-calc-url}")
+    private String calculatorCalcUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     public List<LoanOfferDto> getPossibleOffers(LoanStatementRequestDto loanStatementRequestDto) {
-        String url = calculatorApiUrl + "/offers";
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<LoanStatementRequestDto> request = new HttpEntity<>(loanStatementRequestDto, headers);
 
         ResponseEntity<LoanOfferDto[]> response = restTemplate.exchange(
-                url,
+                calculatorOffersUrl,
                 HttpMethod.POST,
                 request,
                 LoanOfferDto[].class
@@ -47,15 +47,13 @@ public class CalculatorApiService {
     }
 
     public CreditDto getFullCreditData(ScoringDataDto scoringDataDto) {
-        String url = calculatorApiUrl + "/calc";
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<ScoringDataDto> request = new HttpEntity<>(scoringDataDto, headers);
 
         ResponseEntity<CreditDto> response = restTemplate.exchange(
-                url,
+                calculatorCalcUrl,
                 HttpMethod.POST,
                 request,
                 CreditDto.class
