@@ -23,6 +23,7 @@
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <hypersistence-utils.version>3.8.1</hypersistence-utils.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <testcontainers.version>1.19.8</testcontainers.version>
     </properties>
 
     <parent>
@@ -70,6 +71,29 @@
                 <version>1.0-SNAPSHOT</version>
                 <scope>compile</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
