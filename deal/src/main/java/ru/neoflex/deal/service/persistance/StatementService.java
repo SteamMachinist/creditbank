@@ -16,7 +16,7 @@ public class StatementService {
 
     private Statement findByIdOrThrow(UUID id) {
         return statementRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Statement with id " + id + " not found")
+                () -> new EntityNotFoundException(String.format("Statement with id %s not found", id))
         );
     }
 

@@ -16,7 +16,7 @@ public class CreditService {
 
     private Credit findByIdOrThrow(UUID id) {
         return creditRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Credit with id " + id + " not found")
+                () -> new EntityNotFoundException(String.format("Credit with id %s not found", id))
         );
     }
 

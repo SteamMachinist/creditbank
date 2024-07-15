@@ -16,7 +16,7 @@ public class ClientService {
 
     private Client findByIdOrThrow(UUID id) {
         return clientRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Client with id " + id + " not found")
+                () -> new EntityNotFoundException(String.format("Client with id %s not found", id))
         );
     }
 
