@@ -42,7 +42,7 @@ public class Statement {
     private Credit credit;
 
     @Enumerated(EnumType.STRING)
-    ApplicationStatus status;
+    private ApplicationStatus status;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
@@ -55,7 +55,7 @@ public class Statement {
 
     private Timestamp signDate;
 
-    String sesCode;
+    private String sesCode;
 
     @Type(type = "jsonb")
     @Column(columnDefinition = "jsonb")
