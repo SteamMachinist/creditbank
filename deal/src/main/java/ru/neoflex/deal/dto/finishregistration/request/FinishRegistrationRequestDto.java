@@ -1,6 +1,7 @@
 package ru.neoflex.deal.dto.finishregistration.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import ru.neoflex.calculator.dto.scoring.request.EmploymentDto;
 import ru.neoflex.calculator.dto.scoring.request.Gender;
 import ru.neoflex.calculator.dto.scoring.request.MaritalStatus;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 @Schema(description = "Data for finishing registration")
+@Builder
 public record FinishRegistrationRequestDto(
 
         @NotNull
