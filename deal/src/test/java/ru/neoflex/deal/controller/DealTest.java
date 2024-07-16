@@ -63,18 +63,7 @@ public class DealTest {
 
     @Test
     public void testCreditApproved() throws Exception {
-        LoanStatementRequestDto okLoanStatementRequestDto = LoanStatementRequestDto.builder()
-                .firstName("Name")
-                .lastName("Name")
-                .middleName("Name")
-                .email("mail@mail.com")
-                .amount(BigDecimal.valueOf(500000))
-                .term(36)
-                .birthDate(LocalDate.now().minusYears(30))
-                .passportSeries("2020")
-                .passportNumber("123456")
-                .build();
-
+        LoanStatementRequestDto okLoanStatementRequestDto = LoanStatementRequestDto.builder().build();
         when(calculatorApiService.getPossibleOffers(any())).thenReturn(new ArrayList<>());
 
         mockMvc.perform(post("/deal/statement")
