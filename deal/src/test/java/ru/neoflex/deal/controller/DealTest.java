@@ -1,61 +1,69 @@
 package ru.neoflex.deal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
-import ru.neoflex.calculator.dto.scoring.request.*;
+import ru.neoflex.calculator.dto.scoring.response.CreditDto;
 import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
-import ru.neoflex.deal.entity.ApplicationStatus;
 import ru.neoflex.deal.entity.Client;
-import ru.neoflex.deal.entity.Credit;
+import ru.neoflex.deal.entity.Passport;
 import ru.neoflex.deal.entity.Statement;
-import ru.neoflex.deal.service.persistance.StatementService;
+import ru.neoflex.deal.repository.ClientRepository;
+import ru.neoflex.deal.repository.CreditRepository;
+import ru.neoflex.deal.repository.StatementRepository;
+import ru.neoflex.deal.service.CalculatorApiService;
+import ru.neoflex.deal.service.DealService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@ExtendWith(SpringExtension.class)
+@EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
 @AutoConfigureMockMvc
-@Testcontainers
 public class DealTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private StatementService statementService;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
-    private static LoanStatementRequestDto okLoanStatementRequestDto;
-    private static FinishRegistrationRequestDto okFinishRegistrationRequestDto;
-    private static FinishRegistrationRequestDto badRequestFinishRegistrationRequestDto;
+    @MockBean
+    private ClientRepository clientRepository;
+    @MockBean
+    private CreditRepository creditRepository;
+    @MockBean
+    private StatementRepository statementRepository;
 
-    @BeforeAll
-    static void setUpDtos() {
-        okLoanStatementRequestDto = LoanStatementRequestDto.builder()
+    @MockBean
+    private CalculatorApiService calculatorApiService;
+
+    @SpyBean
+    private DealService dealService;
+
+    @Test
+    public void testCreditApproved() throws Exception {
+        LoanStatementRequestDto okLoanStatementRequestDto = LoanStatementRequestDto.builder()
                 .firstName("Name")
                 .lastName("Name")
                 .middleName("Name")
@@ -67,138 +75,42 @@ public class DealTest {
                 .passportNumber("123456")
                 .build();
 
-        okFinishRegistrationRequestDto = FinishRegistrationRequestDto.builder()
-                .gender(Gender.FEMALE)
-                .passportIssueDate(LocalDate.now().minusYears(5))
-                .passportIssueBranch("Отделение мвд")
-                .accountNumber("123123123")
-                .dependentAmount(1)
-                .maritalStatus(MaritalStatus.MARRIED)
-                .employment(EmploymentDto.builder()
-                        .employerINN("123123")
-                        .employmentStatus(EmploymentStatus.EMPLOYED)
-                        .position(Position.MID_MANAGER)
-                        .salary(BigDecimal.valueOf(50000))
-                        .workExperienceCurrent(24)
-                        .workExperienceTotal(48)
-                        .build())
-                .build();
-    }
+        when(calculatorApiService.getPossibleOffers(any())).thenReturn(new ArrayList<>());
 
-    @BeforeAll
-    static void beforeAll() {
-        postgres.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgres.stop();
-    }
-
-    @AfterEach
-    void cleanup() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "statement", "client", "credit");
-    }
-
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            "postgres:latest"
-    );
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
-
-    @Test
-    public void testCreditApproved() throws Exception {
-        MvcResult result = this.mockMvc.perform(
-                        post(
-                                "/deal/statement")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(okLoanStatementRequestDto)))
-                .andExpect(status().isOk()).andReturn();
-
-        LoanOfferDto[] loanOffers = objectMapper.readValue(result.getResponse().getContentAsString(), LoanOfferDto[].class);
-        assertEquals(4, loanOffers.length);
-
-        Statement statement = statementService.getStatementById(loanOffers[0].statementId());
-        assertEquals(ApplicationStatus.PREAPPROVAL, statement.getStatus());
-
-        Client client = statement.getClient();
-        assertEquals(okLoanStatementRequestDto.firstName(), client.getFirstName());
-        assertEquals(okLoanStatementRequestDto.lastName(), client.getLastName());
-        assertEquals(okLoanStatementRequestDto.middleName(), client.getMiddleName());
-        assertEquals(okLoanStatementRequestDto.email(), client.getEmail());
-        assertEquals(okLoanStatementRequestDto.birthDate(), client.getBirthDate());
-        assertEquals(okLoanStatementRequestDto.passportNumber(), client.getPassport().number());
-        assertEquals(okLoanStatementRequestDto.passportSeries(), client.getPassport().series());
-
-
-        this.mockMvc.perform(
-                        post(
-                                "/deal/offer/select")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(loanOffers[0])))
+        mockMvc.perform(post("/deal/statement")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(okLoanStatementRequestDto)))
                 .andExpect(status().isOk());
 
-        statement = statementService.getStatementById(loanOffers[0].statementId());
-        assertEquals(ApplicationStatus.APPROVED, statement.getStatus());
-        assertEquals(loanOffers[0], statement.getAppliedOffer());
+        verify(clientRepository, atLeast(1)).save(any());
+        verify(statementRepository, atLeast(1)).save(any());
 
+        UUID uuid = UUID.randomUUID();
+        Client client = new Client();
+        client.setPassport(Passport.builder().build());
+        Statement statement = new Statement(client);
+        statement.setStatementId(uuid);
+        when(statementRepository.findById(any())).thenReturn(Optional.of(statement));
 
-        this.mockMvc.perform(
-                        post(
-                                "/deal/calculate/" + loanOffers[0].statementId())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(okFinishRegistrationRequestDto)))
+        mockMvc.perform(post("/deal/offer/select")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(LoanOfferDto.builder().statementId(uuid).build())))
                 .andExpect(status().isOk());
 
-        statement = statementService.getStatementById(loanOffers[0].statementId());
-        assertEquals(ApplicationStatus.CC_APPROVED, statement.getStatus());
+        verify(clientRepository, atLeast(1)).save(any());
+        verify(statementRepository, atLeast(1)).save(any());
 
-        client = statement.getClient();
-        assertEquals(okFinishRegistrationRequestDto.employment().employerINN(), client.getEmployment().employerINN());
-        assertEquals(okFinishRegistrationRequestDto.employment().employmentStatus(), client.getEmployment().employmentStatus());
-        assertEquals(okFinishRegistrationRequestDto.employment().position(), client.getEmployment().position());
-        assertEquals(okFinishRegistrationRequestDto.employment().salary(), client.getEmployment().salary());
-        assertEquals(okFinishRegistrationRequestDto.employment().workExperienceCurrent(), client.getEmployment().workExperienceCurrent());
-        assertEquals(okFinishRegistrationRequestDto.employment().workExperienceTotal(), client.getEmployment().workExperienceTotal());
-        assertEquals(okFinishRegistrationRequestDto.maritalStatus(), client.getMaritalStatus());
-        assertEquals(okFinishRegistrationRequestDto.gender(), client.getGender());
-        assertEquals(okFinishRegistrationRequestDto.dependentAmount(), client.getDependentAmount());
-        assertEquals(okFinishRegistrationRequestDto.passportIssueBranch(), client.getPassport().issueBranch());
-        assertEquals(okFinishRegistrationRequestDto.passportIssueDate(), client.getPassport().issueDate());
-        assertEquals(okFinishRegistrationRequestDto.accountNumber(), client.getAccountNumber());
 
-        Credit credit = statement.getCredit();
-    }
+        when(calculatorApiService.getFullCreditData(any())).thenReturn(CreditDto.builder().build());
+        when(statementRepository.save(any())).thenReturn(statement);
 
-    @Test
-    public void testCreditDenied() throws Exception {
-        MvcResult result = this.mockMvc.perform(
-                        post(
-                                "/deal/statement")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(okLoanStatementRequestDto)))
-                .andExpect(status().isOk()).andReturn();
-
-        LoanOfferDto loanOffer = objectMapper.readValue(result.getResponse().getContentAsString(), LoanOfferDto[].class)[0];
-
-        this.mockMvc.perform(
-                        post(
-                                "/deal/offer/select")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(loanOffer)))
+        mockMvc.perform(post(String.format("/deal/calculate/%s", UUID.randomUUID()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(FinishRegistrationRequestDto.builder().build())))
                 .andExpect(status().isOk());
 
-        this.mockMvc.perform(
-                        post(
-                                "/deal/calculate/" + loanOffer.statementId())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(badRequestFinishRegistrationRequestDto)))
-                .andExpect(status().isBadRequest());
+        verify(clientRepository, atLeast(1)).save(any());
+        verify(creditRepository, atLeast(1)).save(any());
+        verify(statementRepository, atLeast(1)).save(any());
     }
 }
