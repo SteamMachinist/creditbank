@@ -41,7 +41,7 @@ public class CalculatorControllerTest {
                 .email("mail@mail.com")
                 .amount(BigDecimal.valueOf(500000))
                 .term(36)
-                .birthdate(LocalDate.now().minusYears(30))
+                .birthDate(LocalDate.now().minusYears(30))
                 .passportSeries("2020")
                 .passportNumber("123456")
                 .build();
@@ -53,7 +53,7 @@ public class CalculatorControllerTest {
                 .email("mail@mail.com")
                 .amount(BigDecimal.valueOf(500000))
                 .term(36)
-                .birthdate(LocalDate.now().minusYears(16))
+                .birthDate(LocalDate.now().minusYears(16))
                 .passportSeries("2020")
                 .passportNumber("123456")
                 .build();

@@ -1,0 +1,20 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: deal
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/creditbank_db
+    password: password
+    username: creditbank_user
+
+deal:
+  calculator-offers-url: http://localhost:8080/calculator/offers
+  calculator-calc-url: http://localhost:8080/calculator/calc
