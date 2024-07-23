@@ -13,4 +13,11 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <dependencies>
+        <dependency>
+            <groupId>ru.neoflex</groupId>
+            <artifactId>calculator</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
