@@ -77,6 +77,14 @@
                 <scope>compile</scope>
             </dependency>
 
+            <!-- deal microservice -->
+            <dependency>
+                <groupId>ru.neoflex</groupId>
+                <artifactId>deal</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
             <dependency>
                 <groupId>org.mockito</groupId>
