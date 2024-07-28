@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
+import ru.neoflex.statement.service.StatementService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -17,16 +18,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatementController implements StatementApi {
 
+    private final StatementService statementService;
+
     @Override
     @PostMapping
     public ResponseEntity<List<LoanOfferDto>> prescoreAndGenerateLoanOffers(
             @RequestBody @Valid LoanStatementRequestDto loanStatementRequestDto) {
-        return null;
+        return ResponseEntity.ok(statementService.prescoreAndGenerateLoanOffers(loanStatementRequestDto));
     }
 
     @Override
     @PostMapping("/offer")
     public ResponseEntity<Void> chooseLoanOffer(@RequestBody LoanOfferDto loanOfferDto) {
-        return null;
+        statementService.chooseLoanOffer(loanOfferDto);
+        return ResponseEntity.ok().build();
     }
 }
