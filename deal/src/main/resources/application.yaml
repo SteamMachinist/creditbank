@@ -15,6 +15,9 @@ spring:
     password: password
     username: creditbank_user
 
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
 deal:
   calculator-offers-url: http://localhost:8080/calculator/offers
   calculator-calc-url: http://localhost:8080/calculator/calc
