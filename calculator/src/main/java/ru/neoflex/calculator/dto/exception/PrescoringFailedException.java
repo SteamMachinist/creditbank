@@ -1,4 +1,4 @@
-package ru.neoflex.deal.exception;
+package ru.neoflex.calculator.dto.exception;
 
 public class PrescoringFailedException extends RuntimeException {
 

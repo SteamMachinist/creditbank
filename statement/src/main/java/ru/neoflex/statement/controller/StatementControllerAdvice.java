@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.neoflex.calculator.dto.exception.CreditDeniedException;
-import ru.neoflex.deal.exception.PrescoringFailedException;
+import ru.neoflex.calculator.dto.exception.PrescoringFailedException;
 
 @ControllerAdvice
 public class StatementControllerAdvice {

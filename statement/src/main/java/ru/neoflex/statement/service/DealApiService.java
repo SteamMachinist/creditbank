@@ -8,7 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.neoflex.calculator.dto.exception.CreditDeniedException;
 import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
-import ru.neoflex.deal.exception.PrescoringFailedException;
+import ru.neoflex.calculator.dto.exception.PrescoringFailedException;
 
 import java.util.Arrays;
 import java.util.List;

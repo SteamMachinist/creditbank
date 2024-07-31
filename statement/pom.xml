@@ -19,11 +19,6 @@
             <artifactId>calculator</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>ru.neoflex</groupId>
-            <artifactId>deal</artifactId>
-        </dependency>
-
     </dependencies>
 
 </project>
