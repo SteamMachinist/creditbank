@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="1" author="steammachinist">
+    <changeSet id="create table client" author="steammachinist">
         <createTable tableName="client">
             <column name="client_id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
@@ -23,7 +23,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="2" author="steammachinist">
+    <changeSet id="create table credit" author="steammachinist">
         <createTable tableName="credit">
             <column name="credit_id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
@@ -40,7 +40,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="3" author="steammachinist">
+    <changeSet id="create table statement" author="steammachinist">
         <createTable tableName="statement">
             <column name="statement_id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
