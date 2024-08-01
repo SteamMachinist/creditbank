@@ -7,13 +7,16 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     show-sql: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/creditbank_db
     password: password
     username: creditbank_user
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
 
 deal:
   calculator-offers-url: http://localhost:8080/calculator/offers

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
-import ru.neoflex.calculator.dto.scoring.request.ScoringDataDto;
 import ru.neoflex.calculator.dto.scoring.response.CreditDto;
 import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
 import ru.neoflex.deal.entity.*;
@@ -17,7 +16,6 @@ import ru.neoflex.deal.service.persistance.CreditService;
 import ru.neoflex.deal.service.persistance.StatementService;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
