@@ -30,6 +30,8 @@
         <hypersistence-utils.version>3.8.1</hypersistence-utils.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <mockito.version>5.12.0</mockito.version>
+        <neoflex.deal.version>1.0-SNAPSHOT</neoflex.deal.version>
+        <neoflex.calculator.version>1.0-SNAPSHOT</neoflex.calculator.version>
     </properties>
 
     <parent>
@@ -81,7 +83,7 @@
             <dependency>
                 <groupId>ru.neoflex</groupId>
                 <artifactId>calculator</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${neoflex.calculator.version}</version>
                 <scope>compile</scope>
             </dependency>
 
@@ -89,7 +91,7 @@
             <dependency>
                 <groupId>ru.neoflex</groupId>
                 <artifactId>deal</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>${neoflex.deal.version}</version>
                 <scope>compile</scope>
             </dependency>
 
