@@ -18,7 +18,6 @@
             <groupId>ru.neoflex</groupId>
             <artifactId>calculator</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

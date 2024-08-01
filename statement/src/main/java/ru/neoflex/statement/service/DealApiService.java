@@ -9,6 +9,7 @@ import ru.neoflex.calculator.dto.exception.CreditDeniedException;
 import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
 import ru.neoflex.calculator.dto.exception.PrescoringFailedException;
+import ru.neoflex.statement.exception.DealException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +23,8 @@ public class DealApiService {
     @Value("${statement.deal-offer-select-url}")
     private String dealOfferSelectUrl;
 
+    private final int VALIDATION_ERROR_CODE = 400;
+
     private final RestTemplate restTemplate = new RestTemplate();
 
     public List<LoanOfferDto> registerStatementAndGenerateOffers(LoanStatementRequestDto loanStatementRequestDto) {
@@ -31,8 +34,8 @@ public class DealApiService {
         ResponseEntity<LoanOfferDto[]> responseEntity = restTemplate
                 .postForEntity(dealStatementUrl, requestEntity, LoanOfferDto[].class);
 
-        if (responseEntity.getStatusCodeValue() == 400) {
-            throw new PrescoringFailedException("");
+        if (responseEntity.getStatusCodeValue() == VALIDATION_ERROR_CODE) {
+            throw new PrescoringFailedException("Validation failed");
         }
 
         return Arrays.asList(responseEntity.getBody());
@@ -45,8 +48,8 @@ public class DealApiService {
         ResponseEntity<Void> responseEntity = restTemplate
                 .postForEntity(dealOfferSelectUrl, requestEntity, Void.class);
 
-        if (responseEntity.getStatusCode().value() == 400) {
-            throw new CreditDeniedException("");
+        if (responseEntity.getStatusCode().isError()) {
+            throw new DealException("Loan offer select failed");
         }
     }
 
