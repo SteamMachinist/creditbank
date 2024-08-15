@@ -2,9 +2,12 @@ package ru.neoflex.deal.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.neoflex.calculator.dto.exception.CreditDeniedException;
 import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
 import ru.neoflex.calculator.dto.scoring.response.CreditDto;
+import ru.neoflex.deal.configuration.KafkaTopic;
+import ru.neoflex.deal.dto.email.EmailMessage;
 import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
 import ru.neoflex.deal.entity.*;
 import ru.neoflex.deal.mapper.CreditMapper;
@@ -31,6 +34,7 @@ public class DealService {
     private final ScoringDataMapper scoringDataMapper;
     private final CreditMapper creditMapper;
     private final CreditService creditService;
+    private final KafkaProducerService kafkaProducerService;
 
     public List<LoanOfferDto> initialRegisterAndGenerateLoanOffers(LoanStatementRequestDto loanStatementRequestDto) {
         Client client = clientService.addClient(
@@ -51,6 +55,8 @@ public class DealService {
         statement.setAppliedOffer(loanOfferDto);
         setNewStatusAndAppendHistory(statement, ApplicationStatus.APPROVED);
         statementService.updateStatement(statement);
+
+        kafkaProducerService.send(KafkaTopic.FINISH_REGISTRATION, new EmailMessage(statement));
     }
 
     private void setNewStatusAndAppendHistory(Statement statement, ApplicationStatus status) {
@@ -78,6 +84,7 @@ public class DealService {
 
         } catch (CreditDeniedException creditDeniedException) {
             setNewStatusAndAppendHistory(statement, ApplicationStatus.CC_DENIED);
+            kafkaProducerService.send(KafkaTopic.STATEMENT_DENIED, new EmailMessage(statement));
             throw creditDeniedException;
 
         } finally {
