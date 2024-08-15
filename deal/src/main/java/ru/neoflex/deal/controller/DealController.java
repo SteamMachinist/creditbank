@@ -41,4 +41,25 @@ public class DealController implements DealApi {
         dealService.finishRegistrationAndCalculateCredit(statementId, finishRegistrationRequestDto);
         return ResponseEntity.ok().build();
     }
+
+    @Override
+    @PostMapping("/document/{statementId}/send")
+    public ResponseEntity<Void> requestSendDocuments(@PathVariable String statementId) {
+        dealService.prepareAndSendDocuments(statementId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @PostMapping("/document/{statementId}/sign")
+    public ResponseEntity<Void> requestSignDocuments(@PathVariable String statementId) {
+        dealService.prepareAndSendSign(statementId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @PostMapping("/document/{statementId}/code")
+    public ResponseEntity<Void> codeSignDocuments(@PathVariable String statementId) {
+        dealService.codeSignDocuments(statementId);
+        return ResponseEntity.ok().build();
+    }
 }
