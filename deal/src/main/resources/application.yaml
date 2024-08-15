@@ -18,6 +18,17 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
+  kafka:
+    bootstrap-servers: localhost:9092
+
 deal:
   calculator-offers-url: http://localhost:8080/calculator/offers
   calculator-calc-url: http://localhost:8080/calculator/calc
+  topics:
+    FINISH_REGISTRATION: ${FINISH_REGISTRATION_TOPIC}
+    CREATE_DOCUMENTS: ${CREATE_DOCUMENTS_TOPIC}
+    SEND_DOCUMENTS: ${SEND_DOCUMENTS_TOPIC}
+    SEND_SES: ${SEND_SES_TOPIC}
+    CREDIT_ISSUED: ${CREDIT_ISSUED_TOPIC}
+    STATEMENT_DENIED: ${STATEMENT_DENIED_TOPIC}
+
