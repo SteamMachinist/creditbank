@@ -49,17 +49,17 @@ public class DealService {
     public void chooseLoanOffer(LoanOfferDto loanOfferDto) {
         Statement statement = statementService.getStatementById(loanOfferDto.statementId());
         statement.setAppliedOffer(loanOfferDto);
-        addCurrentStatusToHistory(statement);
-        statement.setStatus(ApplicationStatus.APPROVED);
+        setNewStatusAndAppendHistory(statement, ApplicationStatus.APPROVED);
         statementService.updateStatement(statement);
     }
 
-    private void addCurrentStatusToHistory(Statement statement) {
+    private void setNewStatusAndAppendHistory(Statement statement, ApplicationStatus status) {
         statement.getStatusHistory().add(
                 new StatusHistoryElement(
                         statement.getStatus(),
                         new Timestamp(System.currentTimeMillis()),
                         ChangeType.AUTOMATIC));
+        statement.setStatus(status);
     }
 
     public void finishRegistrationAndCalculateCredit(String statementId,
@@ -68,14 +68,19 @@ public class DealService {
         finishRegistrationRequestMapper.updateClient(statement.getClient(), finishRegistrationRequestDto);
         statement = statementService.updateStatement(statement);
 
-        CreditDto creditDto = calculatorApiService.getFullCreditData(scoringDataMapper.map(statement));
-        Credit credit = creditMapper.map(creditDto);
-        credit.setCreditStatus(CreditStatus.CALCULATED);
-        credit = creditService.addCredit(credit);
+        try {
+            CreditDto creditDto = calculatorApiService.getFullCreditData(scoringDataMapper.map(statement));
+            Credit credit = creditMapper.map(creditDto);
+            credit.setCreditStatus(CreditStatus.CALCULATED);
+            credit = creditService.addCredit(credit);
+            statement.setCredit(credit);
+            setNewStatusAndAppendHistory(statement, ApplicationStatus.CC_APPROVED);
 
-        statement.setCredit(credit);
-        addCurrentStatusToHistory(statement);
-        statement.setStatus(ApplicationStatus.CC_APPROVED);
-        statementService.updateStatement(statement);
+        } catch (CreditDeniedException creditDeniedException) {
+            setNewStatusAndAppendHistory(statement, ApplicationStatus.CC_DENIED);
+            throw creditDeniedException;
+
+        } finally {
+            statementService.updateStatement(statement);
+        }
     }
-}

@@ -46,7 +46,7 @@ public class CalculatorApiService {
         return Arrays.asList(response.getBody());
     }
 
-    public CreditDto getFullCreditData(ScoringDataDto scoringDataDto) {
+    public CreditDto getFullCreditData(ScoringDataDto scoringDataDto) throws CreditDeniedException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
