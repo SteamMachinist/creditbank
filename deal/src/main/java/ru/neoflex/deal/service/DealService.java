@@ -91,3 +91,37 @@ public class DealService {
             statementService.updateStatement(statement);
         }
     }
+
+    public void prepareAndSendDocuments(String statementId) {
+        Statement statement = statementService.getStatementById(UUID.fromString(statementId));
+
+        setNewStatusAndAppendHistory(statement, ApplicationStatus.PREPARE_DOCUMENTS);
+        statement = statementService.updateStatement(statement);
+        kafkaProducerService.send(KafkaTopic.CREATE_DOCUMENTS, new EmailMessage(statement));
+
+        // documents creation
+
+        setNewStatusAndAppendHistory(statement, ApplicationStatus.DOCUMENT_CREATED);
+        statement = statementService.updateStatement(statement);
+        kafkaProducerService.send(KafkaTopic.SEND_DOCUMENTS, new EmailMessage(statement));
+    }
+
+    public void prepareAndSendSign(String statementId) {
+        Statement statement = statementService.getStatementById(UUID.fromString(statementId));
+        statement.setSesCode(UUID.randomUUID().toString());
+        statement = statementService.updateStatement(statement);
+        kafkaProducerService.send(KafkaTopic.SEND_SES, new EmailMessage(statement));
+    }
+
+    public void codeSignDocuments(String statementId) {
+        Statement statement = statementService.getStatementById(UUID.fromString(statementId));
+
+        statement.setSignDate(new Timestamp(System.currentTimeMillis()));
+        statement.setStatus(ApplicationStatus.DOCUMENT_SIGNED);
+        statement = statementService.updateStatement(statement);
+
+        statement.setStatus(ApplicationStatus.CREDIT_ISSUED);
+        statement = statementService.updateStatement(statement);
+        kafkaProducerService.send(KafkaTopic.CREDIT_ISSUED, new EmailMessage(statement));
+    }
+}
