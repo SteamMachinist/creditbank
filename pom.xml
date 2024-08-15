@@ -8,10 +8,12 @@
     <artifactId>creditbank</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <modules>
         <module>calculator</module>
         <module>deal</module>
         <module>statement</module>
+        <module>dossier</module>
     </modules>
 
     <properties>
@@ -32,6 +34,7 @@
         <mockito.version>5.12.0</mockito.version>
         <neoflex.deal.version>1.0-SNAPSHOT</neoflex.deal.version>
         <neoflex.calculator.version>1.0-SNAPSHOT</neoflex.calculator.version>
+<!--        <spring-kafka.version>3.2.2</spring-kafka.version>-->
     </properties>
 
     <parent>
@@ -109,6 +112,14 @@
                 <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${spring-kafka.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
