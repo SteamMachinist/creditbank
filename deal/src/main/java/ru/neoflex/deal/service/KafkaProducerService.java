@@ -6,7 +6,6 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
-import ru.neoflex.deal.configuration.KafkaTopic;
 import ru.neoflex.deal.configuration.KafkaTopicsProperties;
 import ru.neoflex.deal.dto.email.EmailMessage;
 

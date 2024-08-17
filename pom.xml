@@ -34,7 +34,6 @@
         <mockito.version>5.12.0</mockito.version>
         <neoflex.deal.version>1.0-SNAPSHOT</neoflex.deal.version>
         <neoflex.calculator.version>1.0-SNAPSHOT</neoflex.calculator.version>
-<!--        <spring-kafka.version>3.2.2</spring-kafka.version>-->
     </properties>
 
     <parent>
@@ -50,6 +49,12 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring-boot.vesrion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-mail</artifactId>
                 <version>${spring-boot.vesrion}</version>
             </dependency>
 
