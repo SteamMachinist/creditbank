@@ -7,7 +7,6 @@ import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
 import ru.neoflex.calculator.dto.scoring.response.CreditDto;
 import ru.neoflex.deal.configuration.KafkaTopic;
-import ru.neoflex.deal.dto.email.EmailMessage;
 import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
 import ru.neoflex.deal.entity.*;
 import ru.neoflex.deal.exception.SesException;
@@ -18,6 +17,7 @@ import ru.neoflex.deal.mapper.ScoringDataMapper;
 import ru.neoflex.deal.service.persistance.ClientService;
 import ru.neoflex.deal.service.persistance.CreditService;
 import ru.neoflex.deal.service.persistance.StatementService;
+import ru.neoflex.deal.dto.email.EmailMessage;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -104,7 +104,7 @@ public class DealService {
 
         setNewStatusAndAppendHistory(statement, ApplicationStatus.DOCUMENT_CREATED);
         statement = statementService.updateStatement(statement);
-        kafkaProducerService.send(new EmailMessage(statement, KafkaTopic.SEND_DOCUMENTS, ""));
+        kafkaProducerService.send(new EmailMessage(statement, KafkaTopic.SEND_DOCUMENTS, "*документы*"));
     }
 
     public void prepareAndSendSign(String statementId) {
