@@ -58,8 +58,8 @@ public class DealController implements DealApi {
 
     @Override
     @PostMapping("/document/{statementId}/code")
-    public ResponseEntity<Void> codeSignDocuments(@PathVariable String statementId) {
-        dealService.codeSignDocuments(statementId);
+    public ResponseEntity<Void> codeSignDocuments(@PathVariable String statementId, @RequestBody String sesCode) {
+        dealService.codeSignDocuments(statementId, sesCode);
         return ResponseEntity.ok().build();
     }
 }

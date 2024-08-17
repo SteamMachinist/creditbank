@@ -116,6 +116,13 @@ public interface DealApi {
 
     @Operation(
             summary = "Signs documents with SES",
+            requestBody = @RequestBody(
+                    description = "SES code",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -124,5 +131,6 @@ public interface DealApi {
                     )
             }
     )
-    ResponseEntity<Void> codeSignDocuments(@Parameter(description = "Statement UUID") String statementId);
+    ResponseEntity<Void> codeSignDocuments(@Parameter(description = "Statement UUID") String statementId,
+                                           String sesCode);
 }

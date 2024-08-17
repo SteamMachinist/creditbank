@@ -20,9 +20,9 @@ public class KafkaProducerService {
 
     private final KafkaTemplate<String, Serializable> kafkaTemplate;
 
-    public void send(KafkaTopic topic, EmailMessage message) {
+    public void send(EmailMessage message) {
         ListenableFuture<SendResult<String, Serializable>> future =
-                kafkaTemplate.send(topicsProperties.get(topic), message);
+                kafkaTemplate.send(topicsProperties.get(message.theme()), message);
 
         future.addCallback(new ListenableFutureCallback<>() {
             @Override
