@@ -12,8 +12,8 @@ spring:
     host: smtp.yandex.ru
     port: 465
     protocol: smtps
-    username: creditbank.roshchupkin.ya
-    password: fqxcbwrhuvlepuny
+    username: ${YANDEX_SMTP_USERNAME}
+    password: ${YANDEX_SMTP_PASSWORD}
 
 dossier:
   topics:
