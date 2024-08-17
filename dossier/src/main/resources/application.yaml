@@ -3,4 +3,23 @@ server:
 
 spring:
   application:
-    name: statement
+    name: dossier
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    protocol: smtps
+    username: creditbank.roshchupkin.ya
+    password: fqxcbwrhuvlepuny
+
+dossier:
+  topics:
+    FINISH_REGISTRATION: ${FINISH_REGISTRATION_TOPIC}
+    CREATE_DOCUMENTS: ${CREATE_DOCUMENTS_TOPIC}
+    SEND_DOCUMENTS: ${SEND_DOCUMENTS_TOPIC}
+    SEND_SES: ${SEND_SES_TOPIC}
+    CREDIT_ISSUED: ${CREDIT_ISSUED_TOPIC}
+    STATEMENT_DENIED: ${STATEMENT_DENIED_TOPIC}
