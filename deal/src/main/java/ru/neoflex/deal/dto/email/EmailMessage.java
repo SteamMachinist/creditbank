@@ -11,22 +11,22 @@ public record EmailMessage(
         String address,
         KafkaTopic theme,
         UUID statementId,
-        String info
+        String additionalInfo
 ) implements Serializable {
 
-    public EmailMessage(String address, KafkaTopic theme, UUID statementId, String info) {
+    public EmailMessage(String address, KafkaTopic theme, UUID statementId, String additionalInfo) {
         this.address = address;
         this.theme = theme;
         this.statementId = statementId;
-        this.info = info;
+        this.additionalInfo = additionalInfo;
     }
 
-    public EmailMessage(Statement statement, KafkaTopic theme, String info) {
+    public EmailMessage(Statement statement, KafkaTopic theme, String additionalInfo) {
         this(
                 statement.getClient().getEmail(),
                 theme,
                 statement.getStatementId(),
-                info);
+                additionalInfo);
     }
 
     public EmailMessage(Statement statement, KafkaTopic theme) {
