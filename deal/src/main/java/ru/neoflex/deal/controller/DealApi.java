@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
 import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
+import ru.neoflex.deal.entity.Statement;
 
 import java.util.List;
 
@@ -133,4 +134,33 @@ public interface DealApi {
     )
     ResponseEntity<Void> codeSignDocuments(@Parameter(description = "Statement UUID") String statementId,
                                            String sesCode);
+
+    @Operation(
+            summary = "ADMIN: Get Statement by id",
+            description = "Returns Statement entity by UUID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Statement found",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Statement.class))
+                    )
+            }
+    )
+    ResponseEntity<Statement> getStatementById(@Parameter(description = "Statement UUID") String statementId);
+
+    @Operation(
+            summary = "ADMIN: Get all Statements",
+            description = "Returns all Statement entities",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = Statement.class)))
+                    )
+            }
+    )
+    ResponseEntity<List<Statement>> getAllStatements();
 }

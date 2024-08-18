@@ -7,6 +7,8 @@ import ru.neoflex.calculator.dto.exception.CreditDeniedException;
 import ru.neoflex.calculator.dto.exception.PrescoringFailedException;
 import ru.neoflex.deal.exception.SesException;
 
+import javax.persistence.EntityNotFoundException;
+
 @ControllerAdvice
 public class DealControllerAdvice {
 
@@ -23,5 +25,10 @@ public class DealControllerAdvice {
     @ExceptionHandler(SesException.class)
     public ResponseEntity<String> handleSesExceptions(CreditDeniedException e) {
         return ResponseEntity.badRequest().body(String.format("SesException: %s", e.getMessage()));
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity.badRequest().body(String.format("EntityNotFoundException: %s", e.getMessage()));
     }
 }

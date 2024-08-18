@@ -6,6 +6,7 @@ import ru.neoflex.deal.entity.Statement;
 import ru.neoflex.deal.repository.StatementRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,6 +23,10 @@ public class StatementService {
 
     public Statement getStatementById(UUID id) {
         return findByIdOrThrow(id);
+    }
+
+    public List<Statement> getAllStatements() {
+        return statementRepository.findAll();
     }
 
     public Statement addStatement(Statement statement) {
