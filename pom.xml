@@ -14,6 +14,7 @@
         <module>deal</module>
         <module>statement</module>
         <module>dossier</module>
+        <module>gateway</module>
     </modules>
 
     <properties>
@@ -34,6 +35,7 @@
         <mockito.version>5.12.0</mockito.version>
         <neoflex.deal.version>1.0-SNAPSHOT</neoflex.deal.version>
         <neoflex.calculator.version>1.0-SNAPSHOT</neoflex.calculator.version>
+        <neoflex.statement.version>1.0-SNAPSHOT</neoflex.statement.version>
     </properties>
 
     <parent>
@@ -103,6 +105,14 @@
                 <scope>compile</scope>
             </dependency>
 
+            <!-- statement microservice -->
+            <dependency>
+                <groupId>ru.neoflex</groupId>
+                <artifactId>statement</artifactId>
+                <version>${neoflex.statement.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
             <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
             <dependency>
                 <groupId>org.mockito</groupId>
@@ -124,7 +134,6 @@
                 <artifactId>spring-kafka</artifactId>
                 <version>${spring-kafka.version}</version>
             </dependency>
-
 
         </dependencies>
     </dependencyManagement>
