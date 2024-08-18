@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>common</module>
         <module>calculator</module>
         <module>deal</module>
         <module>statement</module>
@@ -54,6 +55,7 @@
                 <version>${spring-boot.version}</version>
             </dependency>
 
+            <!-- Spring Boot Mail -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-mail</artifactId>
@@ -89,30 +91,6 @@
                 <version>${hypersistence-utils.version}</version>
             </dependency>
 
-            <!-- calculator microservice -->
-            <dependency>
-                <groupId>ru.neoflex</groupId>
-                <artifactId>calculator</artifactId>
-                <version>${neoflex.calculator.version}</version>
-                <scope>compile</scope>
-            </dependency>
-
-            <!-- deal microservice -->
-            <dependency>
-                <groupId>ru.neoflex</groupId>
-                <artifactId>deal</artifactId>
-                <version>${neoflex.deal.version}</version>
-                <scope>compile</scope>
-            </dependency>
-
-            <!-- statement microservice -->
-            <dependency>
-                <groupId>ru.neoflex</groupId>
-                <artifactId>statement</artifactId>
-                <version>${neoflex.statement.version}</version>
-                <scope>compile</scope>
-            </dependency>
-
             <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
             <dependency>
                 <groupId>org.mockito</groupId>
@@ -135,6 +113,13 @@
                 <version>${spring-kafka.version}</version>
             </dependency>
 
+            <!-- Common Microservice -->
+            <dependency>
+                <groupId>ru.neoflex</groupId>
+                <artifactId>common</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <scope>compile</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -195,20 +180,26 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot-maven-plugin.version}</version>
+                    <configuration>
+                        <executable>true</executable>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot-maven-plugin.version}</version>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -237,12 +228,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>maven_central</id>
-            <name>Maven Central</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
-    </repositories>
 </project>

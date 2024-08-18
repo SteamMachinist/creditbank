@@ -3,8 +3,8 @@ package ru.neoflex.gateway.controller.deal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
-import ru.neoflex.deal.entity.Statement;
+import ru.neoflex.common.dto.request.FinishRegistrationRequestDto;
+import ru.neoflex.common.dto.statement.StatementDto;
 import ru.neoflex.gateway.service.deal.GatewayDealApiService;
 
 import java.util.List;
@@ -49,13 +49,13 @@ public class GatewayDealController implements GatewayDealApi {
 
     @Override
     @GetMapping("/admin/statement/{statementId}")
-    public ResponseEntity<Statement> getStatementById(@PathVariable String statementId) {
+    public ResponseEntity<StatementDto> getStatementById(@PathVariable String statementId) {
         return ResponseEntity.ok(dealApiService.getStatementById(statementId));
     }
 
     @Override
     @GetMapping("/admin/statement")
-    public ResponseEntity<List<Statement>> getAllStatements() {
+    public ResponseEntity<List<StatementDto>> getAllStatements() {
         return ResponseEntity.ok(dealApiService.getAllStatements());
     }
 }

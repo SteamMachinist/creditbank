@@ -2,7 +2,7 @@ package ru.neoflex.deal.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.neoflex.calculator.dto.scoring.request.ScoringDataDto;
+import ru.neoflex.common.dto.scoring.request.ScoringDataDto;
 import ru.neoflex.deal.entity.Statement;
 
 @Mapper(componentModel = "spring")

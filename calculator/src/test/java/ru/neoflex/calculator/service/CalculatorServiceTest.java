@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.neoflex.calculator.dto.scoring.request.*;
-import ru.neoflex.calculator.dto.scoring.response.CreditDto;
-import ru.neoflex.calculator.dto.scoring.response.PaymentScheduleElementDto;
+import ru.neoflex.common.dto.scoring.request.*;
+import ru.neoflex.common.dto.scoring.response.CreditDto;
+import ru.neoflex.common.dto.scoring.response.PaymentScheduleElementDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

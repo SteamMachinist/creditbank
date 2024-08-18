@@ -2,9 +2,9 @@ package ru.neoflex.deal.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
+import ru.neoflex.common.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.deal.entity.Client;
-import ru.neoflex.deal.entity.Passport;
+import ru.neoflex.common.dto.statement.client.Passport;
 
 @Mapper(componentModel = "spring")
 public interface LoanStatementRequestMapper {

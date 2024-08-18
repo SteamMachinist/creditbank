@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import ru.neoflex.calculator.dto.scoring.response.CreditDto;
-import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
-import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
-import ru.neoflex.calculator.dto.scoring.request.ScoringDataDto;
+import ru.neoflex.common.dto.offer.request.LoanStatementRequestDto;
+import ru.neoflex.common.dto.offer.response.LoanOfferDto;
+import ru.neoflex.common.dto.scoring.request.ScoringDataDto;
+import ru.neoflex.common.dto.scoring.response.CreditDto;
 
 import java.util.List;
 

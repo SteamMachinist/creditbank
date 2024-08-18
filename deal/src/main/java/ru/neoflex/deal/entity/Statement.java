@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.*;
-import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
+import ru.neoflex.common.dto.offer.response.LoanOfferDto;
+import ru.neoflex.common.dto.statement.ApplicationStatus;
+import ru.neoflex.common.dto.statement.StatusHistoryElement;
 
 import javax.persistence.*;
 import javax.persistence.Entity;

@@ -3,10 +3,10 @@ package ru.neoflex.deal.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
+import ru.neoflex.common.dto.request.FinishRegistrationRequestDto;
 import ru.neoflex.deal.entity.Client;
-import ru.neoflex.deal.entity.Employment;
-import ru.neoflex.deal.entity.Passport;
+import ru.neoflex.common.dto.statement.client.Employment;
+import ru.neoflex.common.dto.statement.client.Passport;
 
 @Mapper(componentModel = "spring")
 public interface FinishRegistrationRequestMapper {

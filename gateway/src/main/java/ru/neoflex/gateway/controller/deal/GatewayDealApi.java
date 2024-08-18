@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
-import ru.neoflex.deal.entity.Statement;
+import ru.neoflex.common.dto.request.FinishRegistrationRequestDto;
+import ru.neoflex.common.dto.statement.StatementDto;
 
 import java.util.List;
 
@@ -96,11 +96,11 @@ public interface GatewayDealApi {
                             description = "Statement found",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = Statement.class))
+                                    schema = @Schema(implementation = StatementDto.class))
                     )
             }
     )
-    ResponseEntity<Statement> getStatementById(@Parameter(description = "Statement UUID") String statementId);
+    ResponseEntity<StatementDto> getStatementById(@Parameter(description = "Statement UUID") String statementId);
 
     @Operation(
             summary = "ADMIN: Get all Statements",
@@ -110,9 +110,9 @@ public interface GatewayDealApi {
                             responseCode = "200",
                             content = @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Statement.class)))
+                                    array = @ArraySchema(schema = @Schema(implementation = StatementDto.class)))
                     )
             }
     )
-    ResponseEntity<List<Statement>> getAllStatements();
+    ResponseEntity<List<StatementDto>> getAllStatements();
 }

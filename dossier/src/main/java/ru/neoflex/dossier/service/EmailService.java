@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import ru.neoflex.deal.configuration.KafkaTopic;
-import ru.neoflex.deal.dto.email.EmailMessage;
+import ru.neoflex.common.dto.email.KafkaTopic;
+import ru.neoflex.common.dto.email.EmailMessage;
 
 @Service
 @RequiredArgsConstructor

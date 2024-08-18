@@ -3,9 +3,10 @@ package ru.neoflex.deal.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
-import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
-import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
+import ru.neoflex.common.dto.offer.request.LoanStatementRequestDto;
+import ru.neoflex.common.dto.offer.response.LoanOfferDto;
+import ru.neoflex.common.dto.request.FinishRegistrationRequestDto;
+import ru.neoflex.common.dto.statement.StatementDto;
 import ru.neoflex.deal.entity.Statement;
 import ru.neoflex.deal.service.DealService;
 import ru.neoflex.deal.service.persistance.StatementService;
@@ -69,13 +70,13 @@ public class DealController implements DealApi {
 
     @Override
     @GetMapping("/admin/statement/{statementId}")
-    public ResponseEntity<Statement> getStatementById(@PathVariable String statementId) {
-        return ResponseEntity.ok(statementService.getStatementById(UUID.fromString(statementId)));
+    public ResponseEntity<StatementDto> getStatementById(@PathVariable String statementId) {
+        return ResponseEntity.ok(statementService.getStatementDtoById(UUID.fromString(statementId)));
     }
 
     @Override
     @GetMapping("/admin/statement")
-    public ResponseEntity<List<Statement>> getAllStatements() {
-        return ResponseEntity.ok(statementService.getAllStatements());
+    public ResponseEntity<List<StatementDto>> getAllStatements() {
+        return ResponseEntity.ok(statementService.getAllStatementDtos());
     }
 }

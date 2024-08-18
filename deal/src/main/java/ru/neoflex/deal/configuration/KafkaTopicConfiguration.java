@@ -5,6 +5,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
+import ru.neoflex.common.dto.email.KafkaTopic;
 
 @Configuration
 @RequiredArgsConstructor

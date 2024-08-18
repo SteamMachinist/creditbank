@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
-import ru.neoflex.deal.entity.Statement;
+import ru.neoflex.common.dto.request.FinishRegistrationRequestDto;
+import ru.neoflex.common.dto.statement.StatementDto;
 import ru.neoflex.gateway.service.RequestService;
 
 import java.util.Arrays;
@@ -63,23 +63,23 @@ public class GatewayDealApiService {
         );
     }
 
-    public Statement getStatementById(String statementId) {
+    public StatementDto getStatementById(String statementId) {
         return requestService.forwardRequest(
                 dealUrl,
                 DealOperation.GET_STATEMENT_BY_ID.getPath().replace("*", statementId),
                 HttpMethod.GET,
                 Optional.empty(),
-                Statement.class
+                StatementDto.class
         );
     }
 
-    public List<Statement> getAllStatements() {
+    public List<StatementDto> getAllStatements() {
         return Arrays.asList(requestService.forwardRequest(
                 dealUrl,
                 DealOperation.GET_ALL_STATEMENTS.getPath(),
                 HttpMethod.GET,
                 Optional.empty(),
-                Statement[].class)
+                StatementDto[].class)
         );
     }
 }
