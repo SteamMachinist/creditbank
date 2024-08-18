@@ -68,11 +68,13 @@ public class DealController implements DealApi {
     }
 
     @Override
-    public ResponseEntity<Statement> getStatementById(String statementId) {
+    @GetMapping("/admin/statement/{statementId}")
+    public ResponseEntity<Statement> getStatementById(@PathVariable String statementId) {
         return ResponseEntity.ok(statementService.getStatementById(UUID.fromString(statementId)));
     }
 
     @Override
+    @GetMapping("/admin/statement")
     public ResponseEntity<List<Statement>> getAllStatements() {
         return ResponseEntity.ok(statementService.getAllStatements());
     }
