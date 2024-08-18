@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut("execution(* ru.neoflex.deal.controller.*.*(..))")
+    @Pointcut("execution(* ru.neoflex.deal.service..*(..))")
     public void controllerMethods() {}
 
-    @Pointcut("execution(* ru.neoflex.deal.service.DealService.*(..)) ")
+    @Pointcut("execution(* ru.neoflex.deal.service..*(..)) ")
     public void serviceMethods() {}
 
     @Pointcut("controllerMethods() || serviceMethods()")

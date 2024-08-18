@@ -1,4 +1,4 @@
-package ru.neoflex.statement.logging;
+package ru.neoflex.gateway.logging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut("execution(* ru.neoflex.statement.service..*(..))")
+    @Pointcut("execution(* ru.neoflex.gateway.service..*(..))")
     public void controllerMethods() {}
 
-    @Pointcut("execution(* ru.neoflex.statement.service..*(..)) ")
+    @Pointcut("execution(* ru.neoflex.gateway.service..*(..)) ")
     public void serviceMethods() {}
 
     @Pointcut("controllerMethods() || serviceMethods()")
@@ -38,4 +38,3 @@ public class LoggingAspect {
         log.error("Method {} thrown exception: {}", methodName, exception.getMessage());
     }
 }
-

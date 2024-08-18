@@ -10,16 +10,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut("execution(* ru.neoflex.calculator.controller.*.*(..))")
+    @Pointcut("execution(* ru.neoflex.calculator.service..*(..))")
     public void controllerMethods() {}
 
-    @Pointcut("execution(* ru.neoflex.calculator.service.CalculatorService.prescoreAndGenerateOffers(..)) " +
-            "|| execution(* ru.neoflex.calculator.service.CalculatorService.generateIncompletePossibleOffers(..)) " +
-            "|| execution(* ru.neoflex.calculator.service.CalculatorService.calculateOffer*(..)) " +
-            "|| execution(* ru.neoflex.calculator.service.CalculatorService.scoreAndCalculateCredit(..)) " +
-            "|| execution(* ru.neoflex.calculator.service.CalculatorService.generateInitialCredit(..)) " +
-            "|| execution(* ru.neoflex.calculator.service.CalculatorService.scoreCreditRate(..)) " +
-            "|| execution(* ru.neoflex.calculator.service.CalculatorService.calculateCredit*(..))")
+    @Pointcut("execution(* ru.neoflex.calculator.service..*(..)) ")
     public void serviceMethods() {}
 
     @Pointcut("controllerMethods() || serviceMethods()")

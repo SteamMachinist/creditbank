@@ -10,9 +10,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut("execution(* ru.neoflex.dossier.service.*.*(..)) ")
-    public void combinedPointcut() {
-    }
+    @Pointcut("execution(* ru.neoflex.dossier.service..*(..)) ")
+    public void combinedPointcut() {}
 
     @Before("combinedPointcut()")
     public void logMethodCall(JoinPoint joinPoint) {
