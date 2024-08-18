@@ -17,6 +17,7 @@
         <dependency>
             <groupId>ru.neoflex</groupId>
             <artifactId>calculator</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
