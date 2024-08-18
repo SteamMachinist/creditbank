@@ -1,15 +1,15 @@
-package ru.neoflex.deal;
+package ru.neoflex.dossier;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import ru.neoflex.deal.configuration.KafkaTopicsProperties;
+import ru.neoflex.dossier.configuration.KafkaTopicsProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(value = KafkaTopicsProperties.class)
-public class DealApplication {
+public class DossierApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DealApplication.class, args);
+        SpringApplication.run(DossierApplication.class, args);
     }
 }

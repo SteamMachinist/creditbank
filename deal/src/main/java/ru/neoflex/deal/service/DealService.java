@@ -2,11 +2,14 @@ package ru.neoflex.deal.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.neoflex.calculator.dto.exception.CreditDeniedException;
 import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
 import ru.neoflex.calculator.dto.scoring.response.CreditDto;
+import ru.neoflex.deal.configuration.KafkaTopic;
 import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
 import ru.neoflex.deal.entity.*;
+import ru.neoflex.deal.exception.SesException;
 import ru.neoflex.deal.mapper.CreditMapper;
 import ru.neoflex.deal.mapper.FinishRegistrationRequestMapper;
 import ru.neoflex.deal.mapper.LoanStatementRequestMapper;
@@ -14,6 +17,7 @@ import ru.neoflex.deal.mapper.ScoringDataMapper;
 import ru.neoflex.deal.service.persistance.ClientService;
 import ru.neoflex.deal.service.persistance.CreditService;
 import ru.neoflex.deal.service.persistance.StatementService;
+import ru.neoflex.deal.dto.email.EmailMessage;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -31,6 +35,7 @@ public class DealService {
     private final ScoringDataMapper scoringDataMapper;
     private final CreditMapper creditMapper;
     private final CreditService creditService;
+    private final KafkaProducerService kafkaProducerService;
 
     public List<LoanOfferDto> initialRegisterAndGenerateLoanOffers(LoanStatementRequestDto loanStatementRequestDto) {
         Client client = clientService.addClient(
@@ -49,17 +54,19 @@ public class DealService {
     public void chooseLoanOffer(LoanOfferDto loanOfferDto) {
         Statement statement = statementService.getStatementById(loanOfferDto.statementId());
         statement.setAppliedOffer(loanOfferDto);
-        addCurrentStatusToHistory(statement);
-        statement.setStatus(ApplicationStatus.APPROVED);
+        setNewStatusAndAppendHistory(statement, ApplicationStatus.APPROVED);
         statementService.updateStatement(statement);
+
+        kafkaProducerService.send(new EmailMessage(statement, KafkaTopic.FINISH_REGISTRATION));
     }
 
-    private void addCurrentStatusToHistory(Statement statement) {
+    private void setNewStatusAndAppendHistory(Statement statement, ApplicationStatus status) {
         statement.getStatusHistory().add(
                 new StatusHistoryElement(
                         statement.getStatus(),
                         new Timestamp(System.currentTimeMillis()),
                         ChangeType.AUTOMATIC));
+        statement.setStatus(status);
     }
 
     public void finishRegistrationAndCalculateCredit(String statementId,
@@ -68,14 +75,58 @@ public class DealService {
         finishRegistrationRequestMapper.updateClient(statement.getClient(), finishRegistrationRequestDto);
         statement = statementService.updateStatement(statement);
 
-        CreditDto creditDto = calculatorApiService.getFullCreditData(scoringDataMapper.map(statement));
-        Credit credit = creditMapper.map(creditDto);
-        credit.setCreditStatus(CreditStatus.CALCULATED);
-        credit = creditService.addCredit(credit);
+        try {
+            CreditDto creditDto = calculatorApiService.getFullCreditData(scoringDataMapper.map(statement));
+            Credit credit = creditMapper.map(creditDto);
+            credit.setCreditStatus(CreditStatus.CALCULATED);
+            credit = creditService.addCredit(credit);
+            statement.setCredit(credit);
+            setNewStatusAndAppendHistory(statement, ApplicationStatus.CC_APPROVED);
+            kafkaProducerService.send(new EmailMessage(statement, KafkaTopic.CREATE_DOCUMENTS));
 
-        statement.setCredit(credit);
-        addCurrentStatusToHistory(statement);
-        statement.setStatus(ApplicationStatus.CC_APPROVED);
-        statementService.updateStatement(statement);
+        } catch (CreditDeniedException creditDeniedException) {
+            setNewStatusAndAppendHistory(statement, ApplicationStatus.CC_DENIED);
+            kafkaProducerService.send(new EmailMessage(statement, KafkaTopic.STATEMENT_DENIED));
+            throw creditDeniedException;
+
+        } finally {
+            statementService.updateStatement(statement);
+        }
+    }
+
+    public void prepareAndSendDocuments(String statementId) {
+        Statement statement = statementService.getStatementById(UUID.fromString(statementId));
+
+        setNewStatusAndAppendHistory(statement, ApplicationStatus.PREPARE_DOCUMENTS);
+        statement = statementService.updateStatement(statement);
+
+        // documents creation
+
+        setNewStatusAndAppendHistory(statement, ApplicationStatus.DOCUMENT_CREATED);
+        statement = statementService.updateStatement(statement);
+        kafkaProducerService.send(new EmailMessage(statement, KafkaTopic.SEND_DOCUMENTS, "*документы*"));
+    }
+
+    public void prepareAndSendSign(String statementId) {
+        Statement statement = statementService.getStatementById(UUID.fromString(statementId));
+        statement.setSesCode(UUID.randomUUID().toString());
+        statement = statementService.updateStatement(statement);
+        kafkaProducerService.send(new EmailMessage(statement, KafkaTopic.SEND_SES, statement.getSesCode()));
+    }
+
+    public void codeSignDocuments(String statementId, String sesCode) {
+        Statement statement = statementService.getStatementById(UUID.fromString(statementId));
+
+        if (!statement.getSesCode().equals(sesCode)) {
+            throw new SesException("SES code mismatch");
+        }
+
+        statement.setSignDate(new Timestamp(System.currentTimeMillis()));
+        statement.setStatus(ApplicationStatus.DOCUMENT_SIGNED);
+        statement = statementService.updateStatement(statement);
+
+        statement.setStatus(ApplicationStatus.CREDIT_ISSUED);
+        statement = statementService.updateStatement(statement);
+        kafkaProducerService.send(new EmailMessage(statement, KafkaTopic.CREDIT_ISSUED));
     }
 }

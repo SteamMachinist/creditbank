@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.neoflex.calculator.dto.exception.CreditDeniedException;
 import ru.neoflex.calculator.dto.exception.PrescoringFailedException;
+import ru.neoflex.deal.exception.SesException;
 
 @ControllerAdvice
 public class DealControllerAdvice {
@@ -17,5 +18,10 @@ public class DealControllerAdvice {
     @ExceptionHandler(CreditDeniedException.class)
     public ResponseEntity<String> handleCreditDeniedExceptions(CreditDeniedException e) {
         return ResponseEntity.badRequest().body(String.format("CreditDeniedException: %s", e.getMessage()));
+    }
+
+    @ExceptionHandler(SesException.class)
+    public ResponseEntity<String> handleSesExceptions(CreditDeniedException e) {
+        return ResponseEntity.badRequest().body(String.format("SesException: %s", e.getMessage()));
     }
 }

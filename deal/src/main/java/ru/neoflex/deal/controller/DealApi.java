@@ -88,4 +88,49 @@ public interface DealApi {
     ResponseEntity<Void> finishRegistrationAndCalculateCredit(
             @Parameter(description = "Statement UUID") String statementId,
             FinishRegistrationRequestDto finishRegistrationRequestDto);
+
+    @Operation(
+            summary = "Prepares and sends documents to email",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Documents prepared and sent successfully",
+                            content = @Content(schema = @Schema(implementation = Void.class))
+                    )
+            }
+    )
+    ResponseEntity<Void> requestSendDocuments(@Parameter(description = "Statement UUID") String statementId);
+
+    @Operation(
+            summary = "Prepares and sends SES to email",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "SES prepared and sent successfully",
+                            content = @Content(schema = @Schema(implementation = Void.class))
+                    )
+            }
+    )
+    ResponseEntity<Void> requestSignDocuments(@Parameter(description = "Statement UUID") String statementId);
+
+
+    @Operation(
+            summary = "Signs documents with SES",
+            requestBody = @RequestBody(
+                    description = "SES code",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Documents signed successfully",
+                            content = @Content(schema = @Schema(implementation = Void.class))
+                    )
+            }
+    )
+    ResponseEntity<Void> codeSignDocuments(@Parameter(description = "Statement UUID") String statementId,
+                                           String sesCode);
 }
