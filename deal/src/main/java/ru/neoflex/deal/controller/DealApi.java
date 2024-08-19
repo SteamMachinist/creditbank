@@ -13,7 +13,6 @@ import ru.neoflex.common.dto.offer.request.LoanStatementRequestDto;
 import ru.neoflex.common.dto.offer.response.LoanOfferDto;
 import ru.neoflex.common.dto.request.FinishRegistrationRequestDto;
 import ru.neoflex.common.dto.statement.StatementDto;
-import ru.neoflex.deal.entity.Statement;
 
 import java.util.List;
 

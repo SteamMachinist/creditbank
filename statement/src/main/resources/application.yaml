@@ -6,5 +6,5 @@ spring:
     name: statement
 
 statement:
-  deal-statement-url: http://localhost:8081/deal/statement
-  deal-offer-select-url: http://localhost:8081/deal/offer/select
+  deal-statement-url: http://deal:8081/deal/statement
+  deal-offer-select-url: http://deal:8081/deal/offer/select
