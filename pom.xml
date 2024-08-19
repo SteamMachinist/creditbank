@@ -187,9 +187,9 @@
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot-maven-plugin.version}</version>
                     <configuration>
-                        <docker>
-                            <host>//./pipe/dockerDesktopLinuxEngine</host>
-                        </docker>
+<!--                        <docker>-->
+<!--                            <host>//./pipe/dockerDesktopLinuxEngine</host>-->
+<!--                        </docker>-->
                         <excludes>
                             <exclude>
                                 <groupId>org.projectlombok</groupId>

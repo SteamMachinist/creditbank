@@ -11,7 +11,7 @@ spring:
     show-sql: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/creditbank_db
+    url: jdbc:postgresql://db:5432/creditbank_db
     password: password
     username: creditbank_user
 
@@ -19,11 +19,11 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka1:29092
 
 deal:
-  calculator-offers-url: http://localhost:8080/calculator/offers
-  calculator-calc-url: http://localhost:8080/calculator/calc
+  calculator-offers-url: http://calculator:8080/calculator/offers
+  calculator-calc-url: http://calculator:8080/calculator/calc
   topics:
     FINISH_REGISTRATION: ${FINISH_REGISTRATION_TOPIC}
     CREATE_DOCUMENTS: ${CREATE_DOCUMENTS_TOPIC}

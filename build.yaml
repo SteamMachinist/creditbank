@@ -1,0 +1,12 @@
+services:
+  paketo-build:
+    image: maven:3.9.6-eclipse-temurin-17
+    command:
+      - sh
+      - -c
+      - | 
+        mvn clean install -B -DskipTests --no-transfer-progress && mvn spring-boot:build-image -B -DskipTests --no-transfer-progress
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - ".:/workspace"
+    working_dir: "/workspace"
