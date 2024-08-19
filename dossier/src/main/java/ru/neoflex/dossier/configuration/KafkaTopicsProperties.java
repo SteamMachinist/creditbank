@@ -1,7 +1,7 @@
 package ru.neoflex.dossier.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import ru.neoflex.deal.configuration.KafkaTopic;
+import ru.neoflex.common.dto.email.KafkaTopic;
 
 import java.util.Map;
 

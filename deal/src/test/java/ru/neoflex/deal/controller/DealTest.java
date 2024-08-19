@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,21 +14,20 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
-import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
-import ru.neoflex.calculator.dto.scoring.response.CreditDto;
-import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
+import ru.neoflex.common.dto.offer.request.LoanStatementRequestDto;
+import ru.neoflex.common.dto.offer.response.LoanOfferDto;
+import ru.neoflex.common.dto.scoring.response.CreditDto;
+import ru.neoflex.common.dto.request.FinishRegistrationRequestDto;
 import ru.neoflex.deal.entity.Client;
-import ru.neoflex.deal.entity.Passport;
+import ru.neoflex.common.dto.statement.client.Passport;
 import ru.neoflex.deal.entity.Statement;
 import ru.neoflex.deal.repository.ClientRepository;
 import ru.neoflex.deal.repository.CreditRepository;
 import ru.neoflex.deal.repository.StatementRepository;
 import ru.neoflex.deal.service.CalculatorApiService;
 import ru.neoflex.deal.service.DealService;
+import ru.neoflex.deal.service.KafkaProducerService;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, KafkaAutoConfiguration.class})
 @AutoConfigureMockMvc
 public class DealTest {
 
@@ -54,6 +54,8 @@ public class DealTest {
     private CreditRepository creditRepository;
     @MockBean
     private StatementRepository statementRepository;
+    @MockBean
+    private KafkaProducerService kafkaProducerService;
 
     @MockBean
     private CalculatorApiService calculatorApiService;

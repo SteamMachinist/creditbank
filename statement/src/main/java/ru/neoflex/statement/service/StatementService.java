@@ -2,8 +2,8 @@ package ru.neoflex.statement.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
-import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
+import ru.neoflex.common.dto.offer.request.LoanStatementRequestDto;
+import ru.neoflex.common.dto.offer.response.LoanOfferDto;
 
 import java.util.List;
 

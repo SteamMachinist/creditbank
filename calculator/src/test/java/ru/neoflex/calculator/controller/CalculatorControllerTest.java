@@ -8,8 +8,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
-import ru.neoflex.calculator.dto.scoring.request.*;
+import ru.neoflex.common.dto.offer.request.LoanStatementRequestDto;
+import ru.neoflex.common.dto.scoring.request.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

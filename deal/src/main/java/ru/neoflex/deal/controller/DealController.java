@@ -3,12 +3,16 @@ package ru.neoflex.deal.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.neoflex.calculator.dto.offer.request.LoanStatementRequestDto;
-import ru.neoflex.calculator.dto.offer.response.LoanOfferDto;
-import ru.neoflex.deal.dto.finishregistration.request.FinishRegistrationRequestDto;
+import ru.neoflex.common.dto.offer.request.LoanStatementRequestDto;
+import ru.neoflex.common.dto.offer.response.LoanOfferDto;
+import ru.neoflex.common.dto.request.FinishRegistrationRequestDto;
+import ru.neoflex.common.dto.statement.StatementDto;
+import ru.neoflex.deal.entity.Statement;
 import ru.neoflex.deal.service.DealService;
+import ru.neoflex.deal.service.persistance.StatementService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/deal")
@@ -16,6 +20,7 @@ import java.util.List;
 public class DealController implements DealApi {
 
     private final DealService dealService;
+    private final StatementService statementService;
 
     @Override
     @PostMapping("/statement")
@@ -61,5 +66,17 @@ public class DealController implements DealApi {
     public ResponseEntity<Void> codeSignDocuments(@PathVariable String statementId, @RequestBody String sesCode) {
         dealService.codeSignDocuments(statementId, sesCode);
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    @GetMapping("/admin/statement/{statementId}")
+    public ResponseEntity<StatementDto> getStatementById(@PathVariable String statementId) {
+        return ResponseEntity.ok(statementService.getStatementDtoById(UUID.fromString(statementId)));
+    }
+
+    @Override
+    @GetMapping("/admin/statement")
+    public ResponseEntity<List<StatementDto>> getAllStatements() {
+        return ResponseEntity.ok(statementService.getAllStatementDtos());
     }
 }

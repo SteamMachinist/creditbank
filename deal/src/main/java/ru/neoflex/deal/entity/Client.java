@@ -10,8 +10,10 @@ import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import ru.neoflex.calculator.dto.scoring.request.Gender;
-import ru.neoflex.calculator.dto.scoring.request.MaritalStatus;
+import ru.neoflex.common.dto.scoring.request.Gender;
+import ru.neoflex.common.dto.scoring.request.MaritalStatus;
+import ru.neoflex.common.dto.statement.client.Employment;
+import ru.neoflex.common.dto.statement.client.Passport;
 
 import javax.persistence.*;
 import java.time.LocalDate;

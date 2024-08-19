@@ -3,8 +3,8 @@ package ru.neoflex.statement.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.neoflex.calculator.dto.exception.CreditDeniedException;
-import ru.neoflex.calculator.dto.exception.PrescoringFailedException;
+import ru.neoflex.common.exception.CreditDeniedException;
+import ru.neoflex.common.exception.PrescoringFailedException;
 import ru.neoflex.statement.exception.DealException;
 
 @ControllerAdvice

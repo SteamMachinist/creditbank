@@ -10,7 +10,8 @@ import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import ru.neoflex.calculator.dto.scoring.response.PaymentScheduleElementDto;
+import ru.neoflex.common.dto.scoring.response.PaymentScheduleElementDto;
+import ru.neoflex.common.dto.statement.credit.CreditStatus;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

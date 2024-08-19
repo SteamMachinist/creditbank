@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import ru.neoflex.deal.configuration.KafkaTopicsProperties;
-import ru.neoflex.deal.dto.email.EmailMessage;
+import ru.neoflex.common.dto.email.EmailMessage;
 
 import java.io.Serializable;
 
@@ -25,14 +25,10 @@ public class KafkaProducerService {
 
         future.addCallback(new ListenableFutureCallback<>() {
             @Override
-            public void onFailure(Throwable ex) {
-
-            }
+            public void onFailure(Throwable ex) {}
 
             @Override
-            public void onSuccess(SendResult<String, Serializable> result) {
-
-            }
+            public void onSuccess(SendResult<String, Serializable> result) {}
         });
     }
 

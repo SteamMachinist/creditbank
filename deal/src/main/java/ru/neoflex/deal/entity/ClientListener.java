@@ -1,5 +1,8 @@
 package ru.neoflex.deal.entity;
 
+import ru.neoflex.common.dto.statement.client.Employment;
+import ru.neoflex.common.dto.statement.client.Passport;
+
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.util.UUID;
